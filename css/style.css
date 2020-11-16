@@ -9,6 +9,13 @@ body {
   margin: 0 auto;
 }
 
+select:focus, button:focus, input:focus {
+  outline:none;
+}
+
+button {
+  cursor: pointer;
+}
 nav {
   background-color: black;
   color: white;
@@ -33,7 +40,7 @@ nav .action {
 .scoreboard span {
   font-size: 24px;
   line-height: 20px;
-  padding: 10px 20px 0 0;
+  padding: 10px 20px 8px 0;
 }
 .scoreboard li {
   font-size: 36px;
@@ -115,4 +122,51 @@ nav .action {
 .gameboard .hole.open:hover {
   background-color: orange;
   cursor: pointer;
+}
+
+/*New Game Page*/
+.setup {
+
+  background-color: lightgrey;
+}
+.setup li {
+  font-size: 16px;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: lightgrey !important;
+  border: 1px solid grey;
+}
+.setup input, .setup select {
+  padding: 0 !important;
+  font-size: 20px !important;
+}
+.form {
+  padding: 15px 20px;
+  border: 1px solid lightgrey;
+}
+.form label{
+  display:block;
+  text-align: left;
+  color: grey;
+}
+.form input, .form select {
+  border: none;
+  border-bottom: 1px dashed lightgrey;
+  background: none;
+  font-size: 24px;
+  padding: 15px;
+}
+.form select {
+  width: 100%;
+}
+.vs {
+  font-size: 36px;
+  padding: 50px;
+  align-self: center;
+}
+
+.action.start {
+  text-align:right;
+  padding: 0 25px;
+  margin-top: 30px;
 }
