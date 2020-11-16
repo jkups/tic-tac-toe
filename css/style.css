@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Marko+One&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Marko One', serif;
+}
+.container {
+  width: 960px;
+  margin: 0 auto;
+}
+
+nav {
+  background-color: black;
+  color: white;
+}
+ul, .scoreboard{
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  display: inline-flex;
+}
+
+nav .action {
+  float: right;
+  margin: auto;
+}
+.action button {
+  border: none;
+  background-color: lightgrey;
+  padding: 20px;
+  font-size: 16px;
+}
+.scoreboard span {
+  font-size: 24px;
+  line-height: 20px;
+  padding: 10px 20px 0 0;
+}
+.scoreboard li {
+  font-size: 36px;
+  font-weight: 300;
+  padding: 5px 25px;
+  background-color: lightgrey;
+}
+
+.scoreboard li:first-child{
+  background-color: grey;
+}
+
+.wrapper.board {
+  width: 100%;
+  margin-top: 50px;
+  -ms-align-items: center;
+  justify-content: center;
+}
+.players {
+  text-align: center;
+}
+.players .heading {
+  padding: 15px 20px;
+  font-size: 18px;
+  background-color: black;
+  color: white;
+}
+
+.players .identity {
+  display: flex;
+  font-size: 24px;
+  background-color: lightgrey;
+}
+.players .identity > div{
+  padding: 5px 20px;
+}
+
+.players .identity span {
+  font-size: 14px;
+  color: grey;
+}
+.players .round{
+  margin-top:10px;
+  max-height:250px;
+  overflow: auto;
+}
+.players .round > div{
+  display: flex;
+  background-color: lightgrey;
+  border-bottom: 1px solid grey;
+  border-top: 1px solid grey;
+  justify-content: space-evenly;
+  font-size: 24px;
+}
+.players .round > div div{
+  width: 100%;
+  padding: 5px 20px;
+}
+.gameboard {
+  border-radius: 5px;
+  overflow: hidden;
+  display: inline-block;
+  margin: 0 30px;
+}
+.gameboard ul {
+
+  display: flex;
+}
+.gameboard .hole {
+  display:flex;
+  width: 187.9px;
+  height:187.9px;
+  background-color: green;
+  border: 1px solid red;
+  font-size:5em;
+  justify-content: center;
+  align-items: center;
+}
+.gameboard .hole.open:hover {
+  background-color: orange;
+  cursor: pointer;
+}
