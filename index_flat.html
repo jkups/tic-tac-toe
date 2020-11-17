@@ -10,9 +10,9 @@
 </head>
 <body>
   <nav class="nav">
-    <div id="navContainer" class="container">
+    <div class="container">
         <!-- for game board -->
-        <!-- <div class="scoreboard">
+        <div class="scoreboard">
           <span>Score<br>Board</span>
           <ul>
             <li class="player">P1</li>
@@ -24,12 +24,12 @@
           </ul>
         </div>
         <div class="action">
-          <button id="restart">Restart Game</button>
-          <button id="newgame">New Game</button>
-        </div> -->
+          <button>Restart Game</button>
+          <button>New Game</button>
+        </div>
 
         <!-- for setup -->
-        <div id="gameSetup" class="scoreboard">
+        <!-- <div class="scoreboard">
           <span>Game<br>Setup</span>
           <ul class="setup">
             <li class="form">
@@ -62,12 +62,12 @@
               <input type="text">
             </li>
           </ul>
-        </div>
+        </div> -->
     </div>
   </nav>
   <!-- for game board -->
-  <div id="bodyContainer" class="container">
-    <!-- <ul id="gameboard" class="wrapper board">
+  <div class="container">
+    <ul id="gameboard" class="wrapper board">
       <li class="players">
         <div id="342342342" class="one">
           <div class="heading">
@@ -181,26 +181,27 @@
           </div>
         </div>
       </li>
-    </ul> -->
+    </ul>
+  </div>
 
-    <!-- for setup -->
-    <div id="playerSetup">
+  <!-- for setup -->
+  <!-- <div class="container">
+    <div id="playerdetails">
       <ul class="wrapper board">
         <li class="players">
           <div class="heading">Player 1</div>
           <div class="form">
-            <label for="playerOne">
-              Initials:
+            <label for="nickname">
+              Nickname:
             </label>
-            <input class="nickname" id="playerOne" type="text">
+            <input class="nickname" id="nickname" type="text">
           </div>
           <div class="form">
             <label for="token">
               Token:
             </label>
             <select class="token" id="token">
-              <option value="fa-check">fa-check</option>
-              <option value="fa-times">fa-times</option>
+              <option value=""></option>
             </select>
           </div>
           <div class="form">
@@ -216,20 +217,19 @@
           <div >VS</div>
         </li>
         <li class="players">
-          <div class="heading">Player 2</div>
+          <div class="heading">Player 1</div>
           <div class="form">
-            <label for="playerTwo">
-              Intials:
+            <label for="nickname">
+              Nickname:
             </label>
-            <input class="nickname" id="playerTwo" type="text">
+            <input class="nickname" id="nickname" type="text">
           </div>
           <div class="form">
             <label for="token">
               Token:
             </label>
             <select class="token" id="token">
-              <option value="fa-check">fa-check</option>
-              <option value="fa-times">fa-times</option>
+              <option value=""></option>
             </select>
           </div>
           <div class="form">
@@ -246,7 +246,7 @@
         <button id="startGame">Start Game</button>
       </div>
     </div>
-  </div>
+  </div> -->
   <script src="js/jquery.js"></script>
   <script src="js/main.js"></script>
   <script src='js/client.js'></script>

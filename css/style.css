@@ -68,7 +68,9 @@ nav .action {
   background-color: black;
   color: white;
 }
-
+.current .heading{
+  background-color: orange;
+}
 .players .identity {
   display: flex;
   font-size: 24px;

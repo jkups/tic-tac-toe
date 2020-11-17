@@ -1,7 +1,16 @@
 
-const play = {
+Player = function(name){
+  this.id = Math.floor(Math.random() * 100);
+  this.name = name;
+  this.hole = []; //store position, erased at the end of round
+  this.score = []; //index is round, value is score
+};
+
+const init = {
   config:{
-    size: 3,
+    startPlayer: Math.floor(Math.random() * 2) + 1,
+    size: 0,
+    rounds: 0,
     type: 'local',
     winMatrix: {
       row: [],
@@ -11,7 +20,7 @@ const play = {
     }
   },
   generateWinMatrix: function(){
-    const size = 3;
+    const size = this.config.size;
 
     for(let i = 0; i < size; i++){
       this.diagonalMatrix(i, size - (i + 1));
@@ -36,31 +45,23 @@ const play = {
     this.config.winMatrix.leftDiag.push(leftMatrix);
     this.config.winMatrix.rightDiag.push(rightMatrix);
   },
-  players:[
-    {
-      id: '342342342',
-      name:'John',
-      hole: [],//store position, erased at the end of round
-      score: [],//index is round, value is score
-    },
-    {
-      id: '2q3r252134',
-      name:'Jane',
-      hole: [],
-      score: []
+  createPlayers: function(names){
+    const ids = [];
+    for(const name of names){
+      const newPlayer = new Player(name);
+      play.players.push(newPlayer);
+      ids.push(newPlayer.id);
     }
-  ],
-
-  generateBoard: function(){
-
+    return ids;
   },
+}
+const play = {
 
-  createPlayer: function(){
-
-  },
+  players:[],
 
   ticTacToe: function(player, hole, round){
-    player = this.getPlayer(player);
+    // console.log(player);
+    player = this.getPlayer(parseInt(player));
     player.hole.push(hole);
 
     if(player.score[round - 1] === undefined){
@@ -74,9 +75,9 @@ const play = {
   },
 
   getWinner: function(player){
-    const size = this.config.size;
+    const size = init.config.size;
     const hole = player.hole;
-    const winMatrix = this.config.winMatrix;
+    const winMatrix = init.config.winMatrix;
     let count = 0;
 
     for(key in winMatrix){
@@ -107,7 +108,7 @@ const play = {
 
   getPlayer: function(player){
     return this.players.find(function(el){
-      return el.id;
+      return el.id === player;
     });
   },
 
