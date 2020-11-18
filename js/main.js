@@ -64,14 +64,17 @@ const play = {
     player = this.getPlayer(parseInt(player));
     player.hole.push(hole);
 
-    if(player.score[round - 1] === undefined){
-      player.score[round - 1] = 0;
+    // if(player.score[round - 1] === undefined){
+    //   console.log('round: here');
+    //   player.score[round - 1] = 0;
+    // }
+    //
+    // // if(this.config.size)
+    // player.score[round - 1] += 10;//default score to be changed
+    if(player.hole.length >= init.config.size){
+      return this.getWinner(player);
     }
-
-    // if(this.config.size)
-    player.score[round - 1] += 10;//default score to be changed
-
-    return this.getWinner(player);
+    return { winner: false };
   },
 
   getWinner: function(player){
@@ -89,7 +92,17 @@ const play = {
         }
 
         if(count === size){
-          return { winner: true, player: player.id, side: key, group: group };
+          player.score++;
+          init.config.rounds--;
+          return {
+            gameOver: true,
+            winner: true,
+            player: player.id,
+            side: key,
+            group: group,
+            score: player.score,
+            nextRound: init.config.rounds
+          };
         }
 
         if((i + 1) % size === 0){
@@ -98,12 +111,23 @@ const play = {
         };
       }
     }
-    return { winner: false };
-    // const isDraw = this.isDraw();
+
+    return this.isDraw();
   },
 
   isDraw: function(){
+    const holesAllFilled = this.isHolesAllFilled(this.players);
 
+    if(holesAllFilled){
+      init.config.rounds--;
+      return {
+        gameOver: true,
+        winner: false,
+        nextRound: init.config.rounds
+      };
+    }
+
+    return { winner: false };
   },
 
   getPlayer: function(player){
@@ -111,6 +135,19 @@ const play = {
       return el.id === player;
     });
   },
+
+  isHolesAllFilled: function(players){
+    let totalHoles = 0;
+    for(const player of players){
+      totalHoles += player.hole.length;
+    }
+
+    if(totalHoles === init.config.size**2){
+      return true;
+    }
+
+    return false;
+  }
 
 
 }

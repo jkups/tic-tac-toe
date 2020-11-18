@@ -37,24 +37,23 @@ $('#boardSize').on('change', function(){
 })
 
 
-//capture gameboard clicks
+//play game and capture gameboard clicks
 $(document).on('click', '.gameboard .open', function(){
   const $players = $('.players .active');
   const $currPlayer = $('.players .current');
   const currPlayer = $currPlayer.attr('id');
-  // console.log($player);
+
   const token = $('.current .token div').html();
   const hole = $(this).attr('id');
   const currRound = 1; //$player.children('.round .current');
   $(this).html(token);
   $(this).removeClass('open');
-console.log(currPlayer, hole, currRound);
+
   const response = play.ticTacToe(currPlayer, hole, currRound);
   $players.toggleClass('current');
   console.log(response);
-  // updateResult(response);
+  updateGame(response);
 
-  console.log('here');
 })
 
 //initialize game
@@ -99,7 +98,7 @@ $('#startGame').on('click', function(){
 
   const $gameBoard = generateBoard(boardSize);
 
-  const second =2;
+  const second = 2;
   const $playerTwo = generatePlayer(nickname[1], avatar[1], token[1], ids[1], rounds, second, whoStarts);
 
   const $scoreBoard = generateScoreBoard(nickname);
@@ -177,7 +176,7 @@ const generatePlayer = function(nickname, avatar, token, id, rounds, position, s
   $roundsDiv.addClass('round');
   // rounds = parseInt(rounds);
 
-  for(let i = 0; i <= rounds; i++){
+  for(let i = 1; i <= rounds; i++){
     const round = '<div><div>R' + i + '</div><div>--</div>';
     $roundsDiv.append(round);
   }
@@ -190,6 +189,14 @@ const generatePlayer = function(nickname, avatar, token, id, rounds, position, s
 const generateBoard =  function(size){
   const $gameBoardLi = $('<li>');
   $gameBoardLi.addClass('gameboard');
+
+  const $gameBoardState = $('<div style="display:none">');
+  $gameBoardState.addClass('gamestate');
+
+  const $gameStateBack = $('<div>');
+  $gameStateBack.addClass('background');
+  $gameBoardState.append($gameStateBack);
+  $gameBoardLi.append($gameBoardState);
 
   for(let i = 0; i < size; i++){
     const $ul = $('<ul>');
@@ -206,14 +213,29 @@ const generateBoard =  function(size){
   return $gameBoardLi;
 }
 
-const updateResult = function(response){
+const updateGame = function(response){
+  if(response.winner || response.gameOver){
+    $('.gameboard .hole').removeClass('open');
+
+    if(response.winner){
+      //display game over message for winning
+      renderWinMessage(response);
+    } else {
+      //display game over message for draws
+      renderDrawMessage(response);
+    }
+  }
+}
+
+const renderWinMessage = function(response){
 
 }
 
-$('#newgame').on('click', function(){
-  $('#scoreboard').remove();
-  $('#gameboard').remove();
-  $('#playerSetup').css('display', 'block');
-  $('#gameSetup').css('display', 'block');
+const renderDrawMessage = function(response){
+
+}
+
+//start a new game
+$(document).on('click', '#newgame', function(){
   location.reload(true);
 })

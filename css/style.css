@@ -37,6 +37,10 @@ nav .action {
   background-color: lightgrey;
   padding: 20px;
   font-size: 16px;
+  border-left:1px solid black;
+}
+.action button:hover {
+  background-color: grey;
 }
 .scoreboard span {
   font-size: 28px;
@@ -124,6 +128,7 @@ nav .action {
   padding: 5px 20px;
 }
 .gameboard {
+  position: relative;
   border-radius: 5px;
   overflow: hidden;
   display: inline-block;
@@ -138,7 +143,7 @@ nav .action {
   width: 187.9px;
   height:187.9px;
   background-color: green;
-  border: 1px solid red;
+  border: 1px solid grey;
   font-size:5em;
   justify-content: center;
   align-items: center;
@@ -147,7 +152,46 @@ nav .action {
   background-color: orange;
   cursor: pointer;
 }
+.gameboard .gamestate{
+  display:flex;
 
+  justify-content: center;
+}
+.gameboard .background {
+  position: absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background-color: lightgrey;
+  opacity:0.5;
+}
+.gamestate h2 {
+  margin: 2px;
+}
+.gamestate p {
+  font-size:1.5em;
+  font-weight: 400;
+  margin-top: 0;
+}
+.gameboard .message {
+  position: absolute;
+  text-align: center;
+  padding: 35px;
+  margin-top: 30%;
+  border-radius: 10px;
+  background-color: white;
+  box-shadow: 5px 5px black;
+  opacity: 1;
+}
+.gamestate .action button {
+  border-radius: 5px;
+  border: none;
+}
+.gamestate .action button:hover{
+  background-color: grey;
+  color: white;
+}
 /*New Game Page*/
 .gamesetup {
   background-color: lightgrey;
@@ -251,6 +295,7 @@ nav .action {
 
 .action.start button {
   border-radius: 5px;
+  border: none;
 }
 .action.start button:hover{
   background-color: grey;
