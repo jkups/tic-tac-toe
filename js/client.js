@@ -1,4 +1,43 @@
-//capture gaboard clicks
+//player form behaviour
+$('input.nickname').on('blur', function(){
+  const nickname = $(this).val();
+  const defaultValue = $(this).attr('id');
+  if(nickname === ''){
+    $(this).val(defaultValue);
+  } else if(nickname.length > 2){
+    const truncated = nickname.substring(0, 2);
+    $(this).val(truncated);
+  }
+});
+
+$('.dropdown').on('click', function(){
+  const $this = $(this).next();
+  $(".menu").not($this).hide();
+  $this.toggle();
+
+})
+
+$('.menu li').on('click', function(){
+  const token = $(this).html();
+  const $selected = $(this).parent().prev();//.closest() not working
+  $selected.html(token);
+
+  const tokenKey = token.match(/"(.*?)"/);
+  $selected.attr('value', tokenKey[1])
+  $(this).parent().toggle();
+})
+
+$('#boardSize').on('change', function(){
+  if($(this).val() === 'custom'){
+    $('#customBoardSize').show();
+    $('#customBoardSize input').focus();
+  } else {
+    $('#customBoardSize').hide();
+  }
+})
+
+
+//capture gameboard clicks
 $(document).on('click', '.gameboard .open', function(){
   const $players = $('.players .active');
   const $currPlayer = $('.players .current');
@@ -18,12 +57,13 @@ console.log(currPlayer, hole, currRound);
   console.log('here');
 })
 
+//initialize game
 $('#startGame').on('click', function(){
   const rounds = $('#rounds').val();
   const $boardSize = $('#boardSize');
   let boardSize = $boardSize.val();
   if($boardSize.val() === 'custom'){
-    boardSize = $('#customSize').val();
+    boardSize = $('#customBoardSize input').val();
   }
 
   const $nickname = $('.nickname');
@@ -35,13 +75,13 @@ $('#startGame').on('click', function(){
   const $token = $('.token');
   let token = [];
   $token.each(function(){
-    token.push($(this).val())
+    token.push($(this).attr('value'));
   })
 
-  const $jersey = $('.jersey');
-  let jersey = [];
-  $jersey.each(function(){
-    jersey.push($(this).val())
+  const $avatar = $('.dropdown.avatar');
+  let avatar = [];
+  $avatar.each(function(){
+    avatar.push($(this).html())
   })
 
   init.config.size = parseInt(boardSize);
@@ -55,12 +95,12 @@ $('#startGame').on('click', function(){
   $wrapperUl.attr('id', 'gameboard');
 
   const first = 1;
-  const $playerOne = generatePlayer(nickname[0], jersey[0], token[0], ids[0], rounds, first, whoStarts);
+  const $playerOne = generatePlayer(nickname[0], avatar[0], token[0], ids[0], rounds, first, whoStarts);
 
   const $gameBoard = generateBoard(boardSize);
 
   const second =2;
-  const $playerTwo = generatePlayer(nickname[1], jersey[1], token[1], ids[1], rounds, second, whoStarts);
+  const $playerTwo = generatePlayer(nickname[1], avatar[1], token[1], ids[1], rounds, second, whoStarts);
 
   const $scoreBoard = generateScoreBoard(nickname);
   $wrapperUl.append($playerOne, $gameBoard, $playerTwo);
@@ -73,14 +113,14 @@ const renderGame = function($scoreBoard, $playerOne, $gameBoard, $playerTwo){
   $('#gameSetup').css('display', 'none');
   $('#navContainer').append($scoreBoard);
 
-  const $wrapperDiv = $('<ul>');
+  const $wrapperDiv = $('<ul id="gameboard">');
   $wrapperDiv.addClass('wrapper board');
   $wrapperDiv.append($playerOne, $gameBoard, $playerTwo);
   $('#bodyContainer').append($wrapperDiv);
 }
 
 const generateScoreBoard = function(nickname){
-  const $wrapperDiv = $('<div>');
+  const $wrapperDiv = $('<div id="scoreboard">');
   const $scoreBoard = $('<div>');
   $scoreBoard.addClass('scoreboard');
   $scoreBoard.append('<span>Score<br>Board</span>');
@@ -111,7 +151,7 @@ const generateScoreBoard = function(nickname){
   return $wrapperDiv.append($scoreBoard, $actionDiv);
 }
 
-const generatePlayer = function(nickname, jersey, token, id, rounds, position, start){
+const generatePlayer = function(nickname, avatar, token, id, rounds, position, start){
   const $playerLi = $('<li>');
   $playerLi.addClass('players');
 
@@ -124,7 +164,8 @@ const generatePlayer = function(nickname, jersey, token, id, rounds, position, s
 
   const $headingDiv = $('<div>');
   $headingDiv.addClass('heading');
-  $headingDiv.html('Player ' + position)
+  avatar = '<div class="">' + avatar + '</div>';
+  $headingDiv.html(avatar + ' Player ' + position)
 
   const $identityDiv = $('<div>');
   $identityDiv.addClass('identity');
@@ -168,3 +209,11 @@ const generateBoard =  function(size){
 const updateResult = function(response){
 
 }
+
+$('#newgame').on('click', function(){
+  $('#scoreboard').remove();
+  $('#gameboard').remove();
+  $('#playerSetup').css('display', 'block');
+  $('#gameSetup').css('display', 'block');
+  location.reload(true);
+})

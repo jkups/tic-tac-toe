@@ -11,27 +11,10 @@
 <body>
   <nav class="nav">
     <div id="navContainer" class="container">
-        <!-- for game board -->
-        <!-- <div class="scoreboard">
-          <span>Score<br>Board</span>
-          <ul>
-            <li class="player">P1</li>
-            <li class="score">0</li>
-          </ul>
-          <ul>
-            <li class="player">P2</li>
-            <li class="score">4</li>
-          </ul>
-        </div>
-        <div class="action">
-          <button id="restart">Restart Game</button>
-          <button id="newgame">New Game</button>
-        </div> -->
-
         <!-- for setup -->
         <div id="gameSetup" class="scoreboard">
           <span>Game<br>Setup</span>
-          <ul class="setup">
+          <ul class="gamesetup">
             <li class="form">
               <label for="round">How many rounds?</label>
               <select id="rounds">
@@ -55,196 +38,120 @@
                 <option value="5">5 x 5</option>
                 <option value="custom">Custom</option>
               </select>
-              <input id="customSize" type="text" style="display:none;">
             </li>
-            <li id="custom" class="form" style="display:none;">
-              <label for="round">Custom Dimension (e.g. 10)?</label>
+            <li id="customBoardSize" class="form" style="display:none;">
+              <label for="round">Custom size (e.g. 10)?</label>
               <input type="text">
             </li>
           </ul>
         </div>
     </div>
   </nav>
-  <!-- for game board -->
-  <div id="bodyContainer" class="container">
-    <!-- <ul id="gameboard" class="wrapper board">
-      <li class="players">
-        <div id="342342342" class="one">
-          <div class="heading">
-            Player 1
-          </div>
-          <div class="identity">
-            <div>
-              <span>Name</span>
-              <div>JK</div>
-            </div>
-            <div class="token">
-              <span>Token</span>
-              <div><i class="fas fa-check"></i></div>
-            </div>
-          </div>
-          <div class="round">
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-          </div>
-        </div>
-      </li>
-      <li class="gameboard">
-        <ul>
-          <li>
-            <div id="00" class="hole open"></div>
-          </li>
-          <li>
-            <div id="01" class="hole open"></div>
-          </li>
-          <li>
-            <div id="02" class="hole open"></div>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <div id="10"  class="hole open"></div>
-          </li>
-          <li>
-            <div id="11" class="hole open"></div>
-          </li>
-          <li>
-            <div id="12" class="hole open"></div>
-          </li>
-        </ul>
-        <ul>
-          <li>
-            <div id="20" class="hole open"></div>
-          </li>
-          <li>
-            <div id="21" class="hole open"></div>
-          </li>
-          <li>
-            <div id="22" class="hole open"></div>
-          </li>
-        </ul>
-      </li>
-      <li class="players">
-        <div id="342342342" class="two current">
-          <div class="heading">
-            Player 2
-          </div>
-          <div class="identity">
-            <div>
-              <span>Name</span>
-              <div>TK</div>
-            </div>
-            <div class="token">
-              <span>Token</span>
-              <div><i class="fas fa-times"></i></div>
-            </div>
-          </div>
-          <div class="round">
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-            <div>
-              <div>R1</div>
-              <div>O</div>
-            </div>
-          </div>
-        </div>
-      </li>
-    </ul> -->
 
+  <div id="bodyContainer" class="container">
     <!-- for setup -->
     <div id="playerSetup">
       <ul class="wrapper board">
-        <li class="players">
+        <li class="players setup">
           <div class="heading">Player 1</div>
           <div class="form">
-            <label for="playerOne">
-              Initials:
+            <label for="P1">
+              Name (Initials):
             </label>
-            <input class="nickname" id="playerOne" type="text">
+            <input class="nickname" id="P1" value="P1" type="text">
           </div>
           <div class="form">
-            <label for="token">
-              Token:
-            </label>
-            <select class="token" id="token">
-              <option value="fa-check">fa-check</option>
-              <option value="fa-times">fa-times</option>
-            </select>
+            <label>Token:</label>
+            <div class="dropdown-wrapper">
+              <button class="dropdown token" value="">Choose a token</button>
+              <ul class="menu" style="display:none;">
+                <li><i class="fas fa-check"></i> Check</li>
+                <li><i class="fas fa-circle"></i> Circle</li>
+                <li><i class="fas fa-grin-hearts"></i> Heart Face</li>
+                <li><i class="fas fa-heart"></i> Heart</li>
+              </ul>
+              <span class="dropdown-caret"><i class="fas fa-caret-down"></i></span>
+            </div>
           </div>
           <div class="form">
-            <label for="jersey">
-              Jersey:
-            </label>
-            <select class="jersey" id="jersey">
-              <option value=""></option>
-            </select>
+            <label>Avatar:</label>
+            <div class="dropdown-wrapper">
+              <button class="dropdown avatar">Choose an Avatar</button>
+              <ul class="menu avatar" style="display:none;">
+                <li><img src="images/avataaars-0.png" width="50px"></img></li>
+                <li><img src="images/avataaars-1.png" width="50px"></img></li>
+                <li><img src="images/avataaars-2.png" width="50px"></img></li>
+                <li><img src="images/avataaars-3.png" width="50px"></img></li>
+                <li><img src="images/avataaars-4.png" width="50px"></img></li>
+                <li><img src="images/avataaars-5.png" width="50px"></img></li>
+                <li><img src="images/avataaars-6.png" width="50px"></img></li>
+                <li><img src="images/avataaars-7.png" width="50px"></img></li>
+                <li><img src="images/avataaars-8.png" width="50px"></img></li>
+                <li><img src="images/avataaars-9.png" width="50px"></img></li>
+                <li><img src="images/avataaars-10.png" width="50px"></img></li>
+                <li><img src="images/avataaars-11.png" width="50px"></img></li>
+                <li><img src="images/avataaars-12.png" width="50px"></img></li>
+              </ul>
+              <span class="dropdown-caret"><i class="fas fa-caret-down"></i></span>
+            </div>
           </div>
         </li>
         <li class="vs">
           <div >VS</div>
         </li>
-        <li class="players">
+        <li class="players setup">
           <div class="heading">Player 2</div>
           <div class="form">
-            <label for="playerTwo">
-              Intials:
+            <label for="P2">
+              Name (Initials):
             </label>
-            <input class="nickname" id="playerTwo" type="text">
+            <input class="nickname" id="P2" value="P2" type="text">
           </div>
           <div class="form">
-            <label for="token">
-              Token:
-            </label>
-            <select class="token" id="token">
-              <option value="fa-check">fa-check</option>
-              <option value="fa-times">fa-times</option>
-            </select>
+            <label>Token:</label>
+            <div class="dropdown-wrapper">
+              <button class="dropdown token" value="">Choose a token</button>
+              <ul class="menu" style="display:none;">
+                <li><i class="fas fa-check"></i> Check</li>
+                <li><i class="fas fa-circle"></i> Circle</li>
+                <li><i class="fas fa-grin-hearts"></i> Heart Face</li>
+                <li><i class="fas fa-heart"></i> Heart</li>
+              </ul>
+              <span class="dropdown-caret"><i class="fas fa-caret-down"></i></span>
+            </div>
           </div>
           <div class="form">
-            <label for="jersey">
-              Jersey:
-            </label>
-            <select class="jersey" id="jersey">
-              <option value=""></option>
-            </select>
+            <label>Avatar:</label>
+            <div class="dropdown-wrapper">
+              <button class="dropdown avatar">Choose an Avatar</button>
+              <ul class="menu avatar" style="display:none;">
+                <li><img src="images/avataaars-0.png" width="50px"></img></li>
+                <li><img src="images/avataaars-1.png" width="50px"></img></li>
+                <li><img src="images/avataaars-2.png" width="50px"></img></li>
+                <li><img src="images/avataaars-3.png" width="50px"></img></li>
+                <li><img src="images/avataaars-4.png" width="50px"></img></li>
+                <li><img src="images/avataaars-5.png" width="50px"></img></li>
+                <li><img src="images/avataaars-6.png" width="50px"></img></li>
+                <li><img src="images/avataaars-7.png" width="50px"></img></li>
+                <li><img src="images/avataaars-8.png" width="50px"></img></li>
+                <li><img src="images/avataaars-9.png" width="50px"></img></li>
+                <li><img src="images/avataaars-10.png" width="50px"></img></li>
+                <li><img src="images/avataaars-11.png" width="50px"></img></li>
+                <li><img src="images/avataaars-12.png" width="50px"></img></li>
+              </ul>
+              <span class="dropdown-caret"><i class="fas fa-caret-down"></i></span>
+            </div>
           </div>
         </li>
       </ul>
       <div class="action start">
         <button id="startGame">Start Game</button>
       </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <p><strong>TicTacToe</strong>. Made by John with <i class="fas fa-heart"></i> at GA-SEi40</p>
     </div>
   </div>
   <script src="js/jquery.js"></script>
