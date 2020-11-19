@@ -2,10 +2,11 @@
 Player = function(name){
   this.id = Math.floor(Math.random() * 100);
   this.name = name;
-  this.hole = []; //store position, erased at the end of round
+  this.hole = []; //store position, erased at the end of a round
   this.score = 0;
 };
 
+//initialize game
 const init = {
   config:{
     startPlayer: Math.floor(Math.random() * 2) + 1,
@@ -19,7 +20,8 @@ const init = {
       leftDiag: [],
       rightDiag: []
     }
-  },
+  }, //initial config
+
   generateWinMatrix: function(){
     const size = this.config.size;
 
@@ -31,21 +33,25 @@ const init = {
         this.columnMatrix(i,j);
       }
     }
-  },
+  }, //generateWinMatrix()
+
   rowMatrix: function(start, end){
     const matrix = start.toString() + end.toString();
     this.config.winMatrix.row.push(matrix);
-  },
+  },//rowMatrix()
+
   columnMatrix: function(end, start){
     const matrix = start.toString() + end.toString();
     this.config.winMatrix.column.push(matrix);
-  },
+  }, //columnMatrix()
+
   diagonalMatrix: function(start, end){
     const leftMatrix = start.toString() + start.toString();
     const rightMatrix = start.toString() + end.toString();
     this.config.winMatrix.leftDiag.push(leftMatrix);
     this.config.winMatrix.rightDiag.push(rightMatrix);
-  },
+  }, //diagonalMatrix()
+
   createPlayers: function(names){
     const ids = [];
     for(const name of names){
@@ -54,11 +60,11 @@ const init = {
       ids.push(newPlayer.id);
     }
     return ids;
-  },
+  }, //createPlayers()
 }
-const play = {
 
-  players:[],
+const play = {
+  players:[], //holds player data
 
   ticTacToe: function(player, hole){
     // console.log(player);
@@ -69,7 +75,7 @@ const play = {
       return this.getWinner(player);
     }
     return { winner: false };
-  },
+  }, //ticTacToe()
 
   getWinner: function(player){
     const size = init.config.size;
@@ -114,7 +120,7 @@ const play = {
     }
 
     return this.isDraw();
-  },
+  }, //getWinner()
 
   isDraw: function(){
     const holesAllFilled = this.isHolesAllFilled(this.players);
@@ -136,14 +142,14 @@ const play = {
     }
 
     return { winner: false };
-  },
+  }, //isDraw()
 
   emptyHoles: function(){
     const players = this.players;
     for(player of players){
       player.hole = [];
     }
-  },
+  }, //emptyHoles()
 
   reInitialize: function(rounds){
     init.config.rounds = parseInt(rounds);
@@ -152,12 +158,13 @@ const play = {
     for(player of players){
       player.score = 0;
     }
-  },
+  }, //reInitialize()
+
   getPlayer: function(player){
     return this.players.find(function(el){
       return el.id === player;
     });
-  },
+  }, //getPlayer()
 
   findGameWinner: function(rounds){
     const players = this.players;
@@ -173,7 +180,7 @@ const play = {
           return { gameWinner: false };
         }
     }
-  },
+  }, //findGameWinner()
 
   isHolesAllFilled: function(players){
     let totalHoles = 0;
@@ -186,7 +193,5 @@ const play = {
     }
 
     return false;
-  }
-
-
+  } //isHolesAllFilled()
 }

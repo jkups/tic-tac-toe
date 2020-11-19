@@ -6,6 +6,7 @@ $('input.nickname').on('blur', function(){
   const defaultValue = $(this).attr('id');
   if(nickname === ''){
     $(this).val(defaultValue);
+
   } else if(nickname.length > 2){
     const truncated = nickname.substring(0, 2);
     $(this).val(truncated);
@@ -44,7 +45,6 @@ $('#boardSize').on('change', function(){
 const validateInput = function(){
   let enableGameStart = true;
   $('.dropdown').each(function(){
-    console.log('here');
     if($(this).html() === 'Choose an Avatar' || $(this).html() === 'Choose a token'){
       enableGameStart = false;
     }
@@ -53,8 +53,9 @@ const validateInput = function(){
   return enableGameStart;
 }
 
-//start game
+//initialize the game
 $('#startGame').on('click', function(){
+  //validate user input
   const validInput = validateInput();
   if(!validInput){
     alert('Please choose a token and avatar.');
@@ -122,10 +123,5 @@ $('#startGame').on('click', function(){
   );
 
   //render game
-  const $wrapperUl = $('<ul>');
-  $wrapperUl.addClass('wrapper board');
-  $wrapperUl.attr('id', 'gameboard');
-
-  $wrapperUl.append($playerOne, $gameBoard, $playerTwo);
   renderGame($scoreBoard, $playerOne, $gameBoard, $playerTwo);
 })

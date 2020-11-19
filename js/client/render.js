@@ -1,12 +1,13 @@
+//rendering engine collection
 const renderGame = function($scoreBoard, $playerOne, $gameBoard, $playerTwo){
   $('#playerSetup').css('display', 'none');
   $('#gameSetup').css('display', 'none');
   $('#navContainer').append($scoreBoard);
 
-  const $wrapperDiv = $('<ul id="gameboard">');
-  $wrapperDiv.addClass('wrapper board');
-  $wrapperDiv.append($playerOne, $gameBoard, $playerTwo);
-  $('#bodyContainer').append($wrapperDiv);
+  const $wrapperUl = $('<ul id="gameboard">');
+  $wrapperUl.addClass('wrapper board');
+  $wrapperUl.append($playerOne, $gameBoard, $playerTwo);
+  $('#bodyContainer').append($wrapperUl);
 }
 
 const generateScoreBoard = function(nickname){
@@ -66,7 +67,6 @@ const generatePlayer = function(nickname, avatar, token, id, rounds, position, s
 
   const $roundsDiv = $('<div>');
   $roundsDiv.addClass('round');
-  // rounds = parseInt(rounds);
 
   for(let i = 1; i <= rounds; i++){
     let className = '';
@@ -163,84 +163,54 @@ const renderWinMessage = function(gameOver, rounds, nextRound, name, score, draw
   $gameMessage.addClass('message');
 
   if(gameOver){
-    //generate gameover message
+    //generate win message
     const totalRounds = rounds + nextRound - 1;
     const winner = play.findGameWinner(totalRounds);
-
-    if(winner.gameWinner){
-      message = '<h2>GAME OVER</h2>' +
-      '<p>' + winner.winner.name + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
-      '<div class="action">' +
-        '<button id="restart">Restart Game</button>' +
-        '<button class="newgame">New Game</button>' +
-      '</div>';
-    } else {
-      message = '<h2>GAME OVER</h2>' +
-      '<p>You both played fiercely.</p><p>There is no winner!</p>' +
-      '<div class="action">' +
-        '<button id="restart">Restart Game</button>' +
-        '<button class="newgame">New Game</button>' +
-      '</div>';
-    }
+    message = generateWinMessage(winner, totalRounds);
 
   } else {
-    //generate win message
-    if(draw){
-      message = '<h2>Nicely Done!</h2>' +
-      '<p>It is a draw. No one got this round.</p>' +
-      '<div class="action">' +
-        '<button id="nextRound">Next Round</button>' +
-        '<button class="newgame">New Game</button>' +
-      '</div>';
-    } else {
-      const prevRound = nextRound - 1;
-      message = '<h2>Congratulations ' + name + '</h2>' +
-      '<p>You won round ' + prevRound + '.</p>' +
-      '<div class="action">' +
-        '<button id="nextRound">Next Round</button>' +
-        '<button class="newgame">New Game</button>' +
-      '</div>';
-    }
+    //generate draw message
+    message = generateDrawMessage(draw, nextRound, name);
   }
 
   $gameMessage.append(message);
   $('.gamestate').append($gameMessage).show();
 }
 
-const renderDrawMessage = function(gameOver){
-  let message;
-  const $gameMessage = $('<div>');
-  $gameMessage.addClass('message');
-
-  if(gameOver){
-    const totalRounds = rounds + nextRound - 1;
-    const winner = play.findGameWinner(totalRounds);
-
-    if(winner.gameWinner){
-      message = '<h2>GAME OVER</h2>' +
-      '<p>' + winner.winner.name + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
-      '<div class="action">' +
-        '<button id="restart">Restart Game</button>' +
-        '<button class="newgame">New Game</button>' +
-      '</div>';
-    } else {
-    message = '<h2>GAME OVER</h2>' +
+const generateWinMessage = function(winner, totalRounds){
+  if(winner.gameWinner){
+    return '<h2>GAME OVER</h2>' +
+    '<p>' + winner.winner.name + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
+    '<div class="action">' +
+      '<button id="restart">Restart Game</button>' +
+      '<button class="newgame">New Game</button>' +
+    '</div>';
+  } else {
+    return '<h2>GAME OVER</h2>' +
     '<p>You both played fiercely.</p><p>There is no winner!</p>' +
     '<div class="action">' +
       '<button id="restart">Restart Game</button>' +
       '<button class="newgame">New Game</button>' +
     '</div>';
-    }
+  }
+}
 
-  } else {
-    message = '<h2>Nicely Done!</h2>' +
+const generateDrawMessage = function(draw, nextRound, name){
+  if(draw){
+    return '<h2>Nicely Done!</h2>' +
     '<p>It is a draw. No one got this round.</p>' +
     '<div class="action">' +
       '<button id="nextRound">Next Round</button>' +
       '<button class="newgame">New Game</button>' +
     '</div>';
-  }
 
-  $gameMessage.append(message);
-  $('.gamestate').append($gameMessage).show();
+  } else {
+    const prevRound = nextRound - 1;
+    return '<h2>Congratulations ' + name + '</h2>' +
+    '<p>You won round ' + prevRound + '.</p>' +
+    '<div class="action">' +
+      '<button id="nextRound">Next Round</button>' +
+      '<button class="newgame">New Game</button>' +
+    '</div>';
+  }
 }
