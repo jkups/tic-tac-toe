@@ -191,7 +191,7 @@ const renderWinMessage = function(gameOver, rounds, nextRound, name, score, draw
 const generateWinMessage = function(winner, totalRounds){
   if(winner.gameWinner){
     return '<div id="won"><h2>GAME OVER</h2>' +
-    '<p>' + winner.winner.name + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
+    '<p>' + winner.winner.name.toUpperCase() + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
     '<div class="action">' +
       '<button id="restart">Restart Game</button>' +
       '<button class="newgame">New Game</button>' +
@@ -218,7 +218,7 @@ const generateDrawMessage = function(draw, nextRound, name){
 
   } else {
     const prevRound = nextRound - 1;
-    return '<div id="won"><h2>Congratulations ' + name + '</h2>' +
+    return '<div id="won"><h2>Congratulations ' + name.toUpperCase() + '</h2>' +
     '<p>You won round ' + prevRound + '.</p>' +
     '<div class="action">' +
       '<button id="nextRound">Next Round</button>' +
