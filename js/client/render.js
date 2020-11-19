@@ -21,7 +21,7 @@ const generateScoreBoard = function(nickname){
     const $playerLi = $('<li>');
     const $scoreLi = $('<li class="P' + (i + 1) + '">');
 
-    $playerLi.html(nickname[i]);
+    $playerLi.html(nickname[i].toUpperCase());
     $scoreLi.html(0);
     $ul.append($playerLi, $scoreLi);
     $scoreBoard.append($ul);
@@ -68,7 +68,7 @@ const generatePlayers = function(nickname, avatar, token, id, rounds, start){
     $identityDiv.addClass('identity');
     $identityDiv.attr('id', 'P' + (i + 1));
 
-    const nameDiv = '<div><span>Name</span><div>' + nickname[i] + '</div></div>';
+    const nameDiv = '<div><span>Name</span><div>' + nickname[i].toUpperCase() + '</div></div>';
     const tokenDiv = '<div class="token"><span>Token</span><div><i class="fas ' + token[i] + '"></i></div></div>'
 
     const $roundsDiv = $('<div>');
@@ -196,7 +196,7 @@ const generateWinMessage = function(winner, totalRounds){
       '<button id="restart">Restart Game</button>' +
       '<button class="newgame">New Game</button>' +
     '</div></div>';
-    
+
   } else {
     return '<div id="draw"><h2>GAME OVER</h2>' +
     '<p>You both played fiercely.</p><p>There is no winner!</p>' +
