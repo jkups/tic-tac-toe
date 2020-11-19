@@ -8,7 +8,12 @@ body {
   width: 960px;
   margin: 0 auto;
 }
-
+#bodyContainer {
+  display: flex;
+  flex-flow: column;
+  height: calc(100vh - 98px);
+  justify-content: center;
+}
 select:focus, button:focus, input:focus {
   outline:none;
 }
@@ -72,7 +77,6 @@ nav .action {
 }
 .wrapper.board {
   width: 100%;
-  margin-top: 50px;
   -ms-align-items: center;
   justify-content: center;
 }
