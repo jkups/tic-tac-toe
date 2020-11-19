@@ -160,20 +160,21 @@ const play = {
   },
 
   findGameWinner: function(rounds){
-    const winner = this.players.filter(function(el){
-      if((rounds % el.score !== 0 || rounds === el.score || el.score === 1)
-      && el.score !== 0){
-        return true;
-      } else {
-        return false;
-      }
-    });
+    const players = this.players;
 
-    if(winner.length > 0){
-      return { gameWinner: true, winner: winner };
+    for(let i = 0; i < players.length - 1; i++){
+        if(players[i].score > players[i + 1].score){
+          return { gameWinner: true, winner: players[i] };
+
+        } else if(players[i].score < players[i + 1].score){
+          return { gameWinner: true, winner: players[i + 1] };
+
+        } else {
+          return { gameWinner: false };
+        }
     }
-    return { gameWinner: false };
   },
+
   isHolesAllFilled: function(players){
     let totalHoles = 0;
     for(const player of players){

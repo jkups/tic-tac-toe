@@ -155,14 +155,15 @@ nav .action {
 }
 .gameboard .hole {
   display:flex;
-  width: 187.9px;
-  height:187.9px;
   background-color: #4DBAE1;
   border: 1px solid #fff;
-  font-size:5em;
   justify-content: center;
   align-items: center;
   color: #04445B;
+}
+.hole {
+  width: 187.9px;
+  height:187.9px;
 }
 .gameboard .hole.open:hover {
   background-color: #09A3DB;

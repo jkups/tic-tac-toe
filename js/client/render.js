@@ -1,151 +1,3 @@
-//game setup form behaviour
-
-//validate nickname (initials only -- default is P1 & P2)
-$('input.nickname').on('blur', function(){
-  const nickname = $(this).val();
-  const defaultValue = $(this).attr('id');
-  if(nickname === ''){
-    $(this).val(defaultValue);
-  } else if(nickname.length > 2){
-    const truncated = nickname.substring(0, 2);
-    $(this).val(truncated);
-  }
-});
-
-//dropdown control flow
-$('.dropdown').on('click', function(){
-  const $this = $(this).next();
-  $(".menu").not($this).hide();
-  $this.toggle();
-})
-
-//setting dropdown values with token or avatar
-$('.menu li').on('click', function(){
-  const tokenAvatar = $(this).html();
-  const $selected = $(this).parent().prev();//.closest() not working
-  $selected.html(tokenAvatar);
-
-  const selected = tokenAvatar.match(/"(.*?)"/);
-  $selected.attr('value', selected[1])
-  $(this).parent().toggle();
-})
-
-//toggle custom board-size input field
-$('#boardSize').on('change', function(){
-  if($(this).val() === 'custom'){
-    $('#customBoardSize').show();
-    $('#customBoardSize input').focus();
-  } else {
-    $('#customBoardSize').hide();
-  }
-})
-
-const validateInput = function(){
-  let enableGameStart = true;
-  $('.dropdown').each(function(){
-    console.log('here');
-    if($(this).html() === 'Choose an Avatar' || $(this).html() === 'Choose a token'){
-      enableGameStart = false;
-    }
-  })
-
-  return enableGameStart;
-}
-
-//play game and capture gameboard clicks
-$(document).on('click', '.gameboard .open', function(){
-  const $players = $('.players .active');
-  const $currPlayer = $('.players .current');
-  const currPlayer = $currPlayer.attr('id');
-  const token = $('.current .token div').html();
-  const hole = $(this).attr('id');
-
-  $(this).html(token);
-  $(this).removeClass('open');
-
-  const response = play.ticTacToe(currPlayer, hole);
-  $players.toggleClass('current');
-  updateGame(response);
-
-})
-
-//start game
-$('#startGame').on('click', function(){
-  const validInput = validateInput();
-  if(!validInput){
-    alert('Please choose a token and avatar.');
-    return;
-  }
-
-  //get and set player data
-  const rounds = $('#rounds').val();
-  const $boardSize = $('#boardSize');
-  let boardSize = $boardSize.val();
-  if($boardSize.val() === 'custom'){
-    boardSize = $('#customBoardSize input').val();
-  }
-
-  const $nickname = $('.nickname');
-  let nickname = [];
-  $nickname.each(function(){
-    nickname.push($(this).val())
-  })
-
-  const $token = $('.token');
-  let token = [];
-  $token.each(function(){
-    token.push($(this).attr('value'));
-  })
-
-  const $avatar = $('.dropdown.avatar');
-  let avatar = [];
-  $avatar.each(function(){
-    avatar.push($(this).html())
-  })
-
-  //initialize game
-  init.config.size = parseInt(boardSize);
-  init.config.rounds = parseInt(rounds);
-  init.generateWinMatrix();
-  const ids = init.createPlayers(nickname);
-  const whoStarts = init.config.startPlayer;
-
-  //generate game components
-  const $scoreBoard = generateScoreBoard(nickname);
-
-  const first = 1;
-  const $playerOne = generatePlayer(
-    nickname[0],
-    avatar[0],
-    token[0],
-    ids[0],
-    rounds,
-    first,
-    whoStarts
-  );
-
-  const $gameBoard = generateBoard(boardSize);
-
-  const second = 2;
-  const $playerTwo = generatePlayer(
-    nickname[1],
-    avatar[1],
-    token[1],
-    ids[1],
-    rounds,
-    second,
-    whoStarts
-  );
-
-  //render game
-  const $wrapperUl = $('<ul>');
-  $wrapperUl.addClass('wrapper board');
-  $wrapperUl.attr('id', 'gameboard');
-
-  $wrapperUl.append($playerOne, $gameBoard, $playerTwo);
-  renderGame($scoreBoard, $playerOne, $gameBoard, $playerTwo);
-})
-
 const renderGame = function($scoreBoard, $playerOne, $gameBoard, $playerTwo){
   $('#playerSetup').css('display', 'none');
   $('#gameSetup').css('display', 'none');
@@ -245,7 +97,7 @@ const generateBoard =  function(size){
   //calculate hole size
   const containerWidth = 960;
   const playerWidth = 150.53;
-  const marginss = 60;
+  const margins = 60;
   const boardWidth = containerWidth - (playerWidth * 2) - margins - (size * 2);
   const holeWidth = boardWidth/size;
 
@@ -311,6 +163,7 @@ const renderWinMessage = function(gameOver, rounds, nextRound, name, score, draw
   $gameMessage.addClass('message');
 
   if(gameOver){
+    //generate gameover message
     const totalRounds = rounds + nextRound - 1;
     const winner = play.findGameWinner(totalRounds);
 
@@ -390,53 +243,4 @@ const renderDrawMessage = function(gameOver){
 
   $gameMessage.append(message);
   $('.gamestate').append($gameMessage).show();
-}
-
-//start a new game
-$(document).on('click', '.newgame', function(){
-  location.reload(true);
-})
-
-//begin next round
-$(document).on('click', '#nextRound', function(){
-  //move .current-round class to next rounds
-  const $currRound = $('.current-round');
-  const currPosition = $currRound.removeClass('current-round').attr('class');
-  const newPosition = parseInt(currPosition) + 1;
-
-  const $nextRound = $('.round .' + newPosition);
-  $nextRound.addClass('current-round');
-
-  //empty the holes array for each player
-  play.emptyHoles();
-  clearGameBoard();
-})
-
-//restart the game
-$(document).on('click', '#restart', function(){
-  //same as above with the following modifications/additions
-  // move current class to first round
-  const $currRound = $('.current-round');
-  const currPosition = $currRound.removeClass('current-round');
-  $('.1').addClass('current-round');
-
-  //clear round score and scoreboard
-  $('.round div div:nth-child(2)').html('--');
-  $('.scoreboard ul li:nth-child(2)').html('0');
-
-
-  //reset player.score to zero for each player
-  const totalRound = $('.round > div').last().attr('class');
-  play.reInitialize(totalRound);
-  play.emptyHoles();
-  clearGameBoard();
-})
-
-const clearGameBoard = function(){
-  //clear the $gameBoard amd add .open to the holes
-  $('.hole').html('').addClass('open');
-
-  //destroy .message div and hide .gamestate div
-  $('.gamestate').hide();
-  $('.message').remove();
 }
