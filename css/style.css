@@ -28,11 +28,12 @@ nav {
 }
 ul, .scoreboard{
   padding: 0;
-  margin: 0;
   list-style: none;
   display: inline-flex;
 }
-
+.scoreboard ul {
+  margin: 0;
+}
 nav .action {
   float: right;
   margin: auto;
