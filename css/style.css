@@ -223,7 +223,7 @@ nav .action {
   padding: 35px;
 }
 #won {
-  background-image: url("/images/confetti-2.gif");
+  background-image: url("../images/confetti-2.gif");
 }
 #draw {
 
