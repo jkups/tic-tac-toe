@@ -17,18 +17,6 @@ $('.dropdown').on('click', function(){
   const $this = $(this).next();
   $(".menu").not($this).hide();
   $this.toggle();
-
-  let enableStartGame = true;
-  $('.dropdown').each(function(){
-    if($(this).html() === 'Choose an Avatar' || $(this).html() === 'Choose a token'){
-      enableStartGame = false;
-    }
-  })
-
-  if(enableStartGame){
-    $('#startGame').attr('disabled', false)
-  }
-
 })
 
 //setting dropdown values with token or avatar
@@ -52,20 +40,30 @@ $('#boardSize').on('change', function(){
   }
 })
 
+const validateInput = function(){
+  let enableGameStart = true;
+  $('.dropdown').each(function(){
+    console.log('here');
+    if($(this).html() === 'Choose an Avatar' || $(this).html() === 'Choose a token'){
+      enableGameStart = false;
+    }
+  })
+
+  return enableGameStart;
+}
 
 //play game and capture gameboard clicks
 $(document).on('click', '.gameboard .open', function(){
   const $players = $('.players .active');
   const $currPlayer = $('.players .current');
   const currPlayer = $currPlayer.attr('id');
-
   const token = $('.current .token div').html();
   const hole = $(this).attr('id');
-  const currRound = 1; //$player.children('.round .current');
+
   $(this).html(token);
   $(this).removeClass('open');
 
-  const response = play.ticTacToe(currPlayer, hole, currRound);
+  const response = play.ticTacToe(currPlayer, hole);
   $players.toggleClass('current');
   updateGame(response);
 
@@ -73,6 +71,12 @@ $(document).on('click', '.gameboard .open', function(){
 
 //start game
 $('#startGame').on('click', function(){
+  const validInput = validateInput();
+  if(!validInput){
+    alert('Please choose a token and avatar.');
+    return;
+  }
+
   //get and set player data
   const rounds = $('#rounds').val();
   const $boardSize = $('#boardSize');

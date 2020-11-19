@@ -60,18 +60,11 @@ const play = {
 
   players:[],
 
-  ticTacToe: function(player, hole, round){
+  ticTacToe: function(player, hole){
     // console.log(player);
     player = this.getPlayer(parseInt(player));
     player.hole.push(hole);
 
-    // if(player.score[round - 1] === undefined){
-    //   console.log('round: here');
-    //   player.score[round - 1] = 0;
-    // }
-    //
-    // // if(this.config.size)
-    // player.score[round - 1] += 10;//default score to be changed
     if(player.hole.length >= init.config.size){
       return this.getWinner(player);
     }

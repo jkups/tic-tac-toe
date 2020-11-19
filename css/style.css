@@ -18,7 +18,7 @@ button {
 }
 
 nav {
-  background-color: black;
+  background-color: #04445B;
   color: white;
 }
 ul, .scoreboard{
@@ -34,13 +34,18 @@ nav .action {
 }
 .action button {
   border: none;
-  background-color: lightgrey;
+  background-color: #09A3DB;
   padding: 20px;
   font-size: 16px;
-  border-left:1px solid black;
+  border-left:1px solid #04445B;
+  border-right:1px solid #04445B;
+  color: #fff;
+  font-weight: 600;
 }
 .action button:hover {
-  background-color: grey;
+  background-color: #04445B;
+  border-left:1px solid black;
+  border-right:1px solid black;
 }
 .scoreboard span {
   font-size: 28px;
@@ -52,11 +57,11 @@ nav .action {
   font-size: 36px;
   font-weight: 300;
   padding: 5px 25px;
-  background-color: lightgrey;
+  background-color: #4DBAE1;
 }
 
 .scoreboard li:first-child{
-  background-color: grey;
+  background-color: #077DA8;
 }
 
 #customBoardSize {
@@ -77,30 +82,37 @@ nav .action {
 .players.setup {
   position: relative;
   border-radius: 5px;
-  box-shadow: 10px 10px grey;
-  border: 1px solid lightgrey;
+  box-shadow: 10px 10px #04445B;
+  border: 1px solid #04445B;
 }
 .players.setup:hover {
   top: 10px;
   left: 10px;
   box-shadow: none;
 }
+.players.setup label {
+  color: grey;
+}
+.heading.setup {
+  background-color: #09A3DB !important;
+}
 .players .heading {
   padding: 20px;
   font-size: 24px;
   font-weight: 600;
-  background-color: black;
+  background-color: #04445B;
   color: white;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 }
 .current .heading{
-  background-color: orange;
+  background-color: #09A3DB;
 }
 .players .identity {
   display: flex;
   font-size: 24px;
   background-color: lightgrey;
+  color: #04445B;
 }
 .players .identity > div{
   padding: 5px 20px;
@@ -108,18 +120,18 @@ nav .action {
 
 .players .identity span {
   font-size: 14px;
-  color: grey;
 }
 .players .round{
   margin-top:10px;
   max-height:250px;
   overflow: auto;
+  color: #04445B;
 }
 .players .round > div{
   display: flex;
-  background-color: lightgrey;
-  border-bottom: 1px solid grey;
-  border-top: 1px solid grey;
+  background-color: #4DBAE1;
+  border-bottom: 1px solid #fff;
+  border-top: 1px solid #fff;
   justify-content: space-evenly;
   font-size: 24px;
 }
@@ -128,7 +140,7 @@ nav .action {
   padding: 5px 20px;
 }
 .round .current-round {
-  background-color: orange !important;
+  background-color: #09A3DB !important;
 }
 .gameboard {
   position: relative;
@@ -145,14 +157,15 @@ nav .action {
   display:flex;
   width: 187.9px;
   height:187.9px;
-  background-color: green;
-  border: 1px solid grey;
+  background-color: #4DBAE1;
+  border: 1px solid #fff;
   font-size:5em;
   justify-content: center;
   align-items: center;
+  color: #04445B;
 }
 .gameboard .hole.open:hover {
-  background-color: orange;
+  background-color: #09A3DB;
   cursor: pointer;
 }
 .gameboard .gamestate{
@@ -184,7 +197,7 @@ nav .action {
   margin-top: 30%;
   border-radius: 10px;
   background-color: white;
-  box-shadow: 5px 5px black;
+  box-shadow: 5px 5px #04445B;
   opacity: 1;
 }
 .gamestate .action {
@@ -195,10 +208,7 @@ nav .action {
   border: none;
   margin: 0 10px;
 }
-.gamestate .action button:hover{
-  background-color: grey;
-  color: white;
-}
+
 
 
 /*New Game Page*/
@@ -209,8 +219,8 @@ nav .action {
   font-size: 16px;
   padding-left: 15px;
   padding-right: 15px;
-  background-color: lightgrey !important;
-  border: 1px solid grey;
+  background-color: #09A3DB !important;
+  border: 1px solid #04445B;
 }
 .gamesetup input, .gamesetup select {
   padding: 0 !important;
@@ -275,11 +285,9 @@ nav .action {
 .form label{
   display:block;
   text-align: left;
-  color: grey;
 }
 .form input, .form select {
   border: none;
-  border-bottom: 1px dashed lightgrey;
   background: none;
   font-size: 24px;
   padding: 15px;
@@ -292,7 +300,7 @@ nav .action {
   font-weight: 700;
   padding: 50px;
   align-self: center;
-  color: grey;
+  color: #04445B;
 }
 
 .action.start {
@@ -305,10 +313,6 @@ nav .action {
 .action.start button {
   border-radius: 5px;
   border: none;
-}
-.action.start button:hover{
-  background-color: grey;
-  color: white;
 }
 
 .footer {
