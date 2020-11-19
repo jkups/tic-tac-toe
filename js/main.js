@@ -3,7 +3,7 @@ Player = function(name){
   this.id = Math.floor(Math.random() * 100);
   this.name = name;
   this.hole = []; //store position, erased at the end of round
-  this.score = []; //index is round, value is score
+  this.score = 0;
 };
 
 const init = {
@@ -11,6 +11,7 @@ const init = {
     startPlayer: Math.floor(Math.random() * 2) + 1,
     size: 0,
     rounds: 0,
+    nextRound: 1,
     type: 'local',
     winMatrix: {
       row: [],
@@ -81,6 +82,7 @@ const play = {
     const size = init.config.size;
     const hole = player.hole;
     const winMatrix = init.config.winMatrix;
+    let gameOver = true;
     let count = 0;
 
     for(key in winMatrix){
@@ -94,14 +96,20 @@ const play = {
         if(count === size){
           player.score++;
           init.config.rounds--;
+          if(init.config.rounds > 0){
+            gameOver = false;
+          }
+          init.config.nextRound++;
           return {
-            gameOver: true,
+            gameOver: gameOver,
             winner: true,
+            name: player.name,
             player: player.id,
             side: key,
             group: group,
             score: player.score,
-            nextRound: init.config.rounds
+            rounds: init.config.rounds,
+            nextRound: init.config.nextRound
           };
         }
 
@@ -117,25 +125,61 @@ const play = {
 
   isDraw: function(){
     const holesAllFilled = this.isHolesAllFilled(this.players);
+    let gameOver = true;
 
     if(holesAllFilled){
       init.config.rounds--;
+      if(init.config.rounds > 0){
+        gameOver = false;
+      }
+      init.config.nextRound++;
       return {
-        gameOver: true,
+        gameOver: gameOver,
         winner: false,
-        nextRound: init.config.rounds
+        draw: true,
+        rounds: init.config.rounds,
+        nextRound: init.config.nextRound
       };
     }
 
     return { winner: false };
   },
 
+  emptyHoles: function(){
+    const players = this.players;
+    for(player of players){
+      player.hole = [];
+    }
+  },
+
+  reInitialize: function(rounds){
+    init.config.rounds = parseInt(rounds);
+    init.config.nextRound = 1;
+    const players = this.players;
+    for(player of players){
+      player.score = 0;
+    }
+  },
   getPlayer: function(player){
     return this.players.find(function(el){
       return el.id === player;
     });
   },
 
+  findGameWinner: function(rounds){
+    const winner = this.players.filter(function(el){
+      if((rounds % el.score !== 0 || rounds == el.score) && el.score !== 0){
+        return true;
+      } else {
+        return false;
+      }
+    });
+
+    if(winner.length > 0){
+      return { gameWinner: true, winner: winner };
+    }
+    return { gameWinner: false };
+  },
   isHolesAllFilled: function(players){
     let totalHoles = 0;
     for(const player of players){

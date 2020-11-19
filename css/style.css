@@ -127,6 +127,9 @@ nav .action {
   width: 100%;
   padding: 5px 20px;
 }
+.round .current-round {
+  background-color: orange !important;
+}
 .gameboard {
   position: relative;
   border-radius: 5px;
@@ -172,7 +175,7 @@ nav .action {
 .gamestate p {
   font-size:1.5em;
   font-weight: 400;
-  margin-top: 0;
+  margin: 0;
 }
 .gameboard .message {
   position: absolute;
@@ -184,14 +187,20 @@ nav .action {
   box-shadow: 5px 5px black;
   opacity: 1;
 }
+.gamestate .action {
+  margin-top: 30px;
+}
 .gamestate .action button {
   border-radius: 5px;
   border: none;
+  margin: 0 10px;
 }
 .gamestate .action button:hover{
   background-color: grey;
   color: white;
 }
+
+
 /*New Game Page*/
 .gamesetup {
   background-color: lightgrey;
@@ -301,6 +310,7 @@ nav .action {
   background-color: grey;
   color: white;
 }
+
 .footer {
   position:absolute;
   bottom:0;
