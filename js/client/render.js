@@ -39,47 +39,58 @@ const generateScoreBoard = function(nickname){
   $newgameButton.text('New Game');
 
   $actionDiv.append($restartButton, $newgameButton);
-  return $wrapperDiv.append($scoreBoard, $actionDiv);
+  $scoreBoard.append($actionDiv);
+  return $wrapperDiv.append($scoreBoard);
 }
 
-const generatePlayer = function(nickname, avatar, token, id, rounds, position, start){
-  const $playerLi = $('<li>');
-  $playerLi.addClass('players');
+const generatePlayers = function(nickname, avatar, token, id, rounds, start){
+  const players = {};
 
-  const $playerDiv = $('<div>');
-  $playerDiv.attr('id', id);
-  $playerDiv.addClass('active');
-  if(start === position){
-    $playerDiv.addClass('current');
-  }
+  for(let i = 0; i < nickname.length; i++){
+    const suffix = i === 0 ? 'One' : 'Two';
 
-  const $headingDiv = $('<div>');
-  $headingDiv.addClass('heading');
-  avatar = '<div class="">' + avatar + '</div>';
-  $headingDiv.html(avatar + ' Player ' + position)
+    const $playerLi = $('<li>');
+    $playerLi.addClass('players');
 
-  const $identityDiv = $('<div>');
-  $identityDiv.addClass('identity');
-  $identityDiv.attr('id', 'P' + position);
-
-  const nameDiv = '<div><span>Name</span><div>' + nickname + '</div></div>';
-  const tokenDiv = '<div class="token"><span>Token</span><div><i class="fas ' + token + '"></i></div></div>'
-
-  const $roundsDiv = $('<div>');
-  $roundsDiv.addClass('round');
-
-  for(let i = 1; i <= rounds; i++){
-    let className = '';
-    if(i === 1){
-      className = 'current-round ';
+    const $playerDiv = $('<div>');
+    $playerDiv.attr('id', id[i]);
+    $playerDiv.addClass('active');
+    if(start === i + 1){
+      $playerDiv.addClass('current');
     }
-    const round = '<div class="' + className + i + '"><div>R' + i + '</div><div>--</div>';
-    $roundsDiv.append(round);
+
+    const $headingDiv = $('<div>');
+    $headingDiv.addClass('heading');
+    avatarImg = '<div class="">' + avatar[i] + '</div>';
+    $headingDiv.html(avatarImg + ' Player ' + (i + 1));
+
+    const $identityDiv = $('<div>');
+    $identityDiv.addClass('identity');
+    $identityDiv.attr('id', 'P' + (i + 1));
+
+    const nameDiv = '<div><span>Name</span><div>' + nickname[i] + '</div></div>';
+    const tokenDiv = '<div class="token"><span>Token</span><div><i class="fas ' + token[i] + '"></i></div></div>'
+
+    const $roundsDiv = $('<div>');
+    $roundsDiv.addClass('round');
+
+    for(let j = 1; j <= rounds; j++){
+      let className = '';
+      if(j === 1){
+        className = 'current-round ';
+      }
+      const round = '<div class="' + className + j + '"><div>R' + j + '</div><div>-</div>';
+      $roundsDiv.append(round);
+    }
+
+    $identityDiv.append(nameDiv, tokenDiv);
+    $playerDiv.append($headingDiv, $identityDiv, $roundsDiv);
+    $playerLi.append($playerDiv);
+
+    players['$player' + suffix] = $playerLi;
   }
 
-  $identityDiv.append(nameDiv, tokenDiv);
-  $playerDiv.append($headingDiv, $identityDiv, $roundsDiv);
-  return $playerLi.append($playerDiv);
+  return players;
 }
 
 const generateBoard =  function(size){
@@ -179,38 +190,39 @@ const renderWinMessage = function(gameOver, rounds, nextRound, name, score, draw
 
 const generateWinMessage = function(winner, totalRounds){
   if(winner.gameWinner){
-    return '<h2>GAME OVER</h2>' +
+    return '<div id="won"><h2>GAME OVER</h2>' +
     '<p>' + winner.winner.name + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
     '<div class="action">' +
       '<button id="restart">Restart Game</button>' +
       '<button class="newgame">New Game</button>' +
-    '</div>';
+    '</div></div>';
+    
   } else {
-    return '<h2>GAME OVER</h2>' +
+    return '<div id="draw"><h2>GAME OVER</h2>' +
     '<p>You both played fiercely.</p><p>There is no winner!</p>' +
     '<div class="action">' +
       '<button id="restart">Restart Game</button>' +
       '<button class="newgame">New Game</button>' +
-    '</div>';
+    '</div></div>';
   }
 }
 
 const generateDrawMessage = function(draw, nextRound, name){
   if(draw){
-    return '<h2>Nicely Done!</h2>' +
+    return '<div id="draw"><h2>Nicely Done!</h2>' +
     '<p>It is a draw. No one got this round.</p>' +
     '<div class="action">' +
       '<button id="nextRound">Next Round</button>' +
       '<button class="newgame">New Game</button>' +
-    '</div>';
+    '</div></div>';
 
   } else {
     const prevRound = nextRound - 1;
-    return '<h2>Congratulations ' + name + '</h2>' +
+    return '<div id="won"><h2>Congratulations ' + name + '</h2>' +
     '<p>You won round ' + prevRound + '.</p>' +
     '<div class="action">' +
       '<button id="nextRound">Next Round</button>' +
       '<button class="newgame">New Game</button>' +
-    '</div>';
+    '</div></div>';
   }
 }

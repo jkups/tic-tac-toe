@@ -3,6 +3,7 @@
 body {
   margin: 0;
   font-family: 'Signika Negative', sans-serif;
+  background-color: #ffe;
 }
 .container {
   width: 960px;
@@ -13,6 +14,13 @@ body {
   flex-flow: column;
   height: calc(100vh - 98px);
   justify-content: center;
+}
+.logo {
+  font-size: 28px;
+  font-weight: 700;
+  margin-left:auto;
+  padding: 10px 0;
+  color: #ffe;
 }
 select:focus, button:focus, input:focus {
   outline:none;
@@ -26,17 +34,20 @@ nav {
   background-color: #04445B;
   color: white;
 }
-ul, .scoreboard{
+ul, .scoreboard {
   padding: 0;
   list-style: none;
   display: inline-flex;
+}
+.scoreboard {
+  width: 100%;
 }
 .scoreboard ul {
   margin: 0;
 }
 nav .action {
   float: right;
-  margin: auto;
+  margin-left: auto;
 }
 .action button {
   border: none;
@@ -58,6 +69,7 @@ nav .action {
   line-height: 20px;
   padding: 10px 20px 8px 0;
   font-weight: 700;
+  color: #ffe;
 }
 .scoreboard li {
   font-size: 36px;
@@ -105,13 +117,13 @@ nav .action {
   padding: 20px;
   font-size: 24px;
   font-weight: 600;
-  background-color: #04445B;
+  background-color: #09A3DB;
   color: white;
   border-top-right-radius: 5px;
   border-top-left-radius: 5px;
 }
 .current .heading{
-  background-color: #09A3DB;
+  background-color: #077DA8;
 }
 .players .identity {
   display: flex;
@@ -145,7 +157,8 @@ nav .action {
   padding: 5px 20px;
 }
 .round .current-round {
-  background-color: #09A3DB !important;
+  background-color: #077DA8 !important;
+  color: #fff;
 }
 .gameboard {
   position: relative;
@@ -199,12 +212,21 @@ nav .action {
 .gameboard .message {
   position: absolute;
   text-align: center;
-  padding: 35px;
   margin-top: 30%;
   border-radius: 10px;
   background-color: white;
   box-shadow: 5px 5px #04445B;
   opacity: 1;
+  overflow: hidden;
+}
+#won, #draw {
+  padding: 35px;
+}
+#won {
+  background-image: url("/images/confetti-2.gif");
+}
+#draw {
+
 }
 .gamestate .action {
   margin-top: 30px;
@@ -265,8 +287,7 @@ nav .action {
   text-align: left;
   background-color: white;
   color: grey;
-  border-left: 1px solid lightgrey;
-  border-right: 1px solid lightgrey;
+  border: 1px solid lightgrey;
 }
 .menu.avatar {
   display: flex;

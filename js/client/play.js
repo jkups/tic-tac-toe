@@ -55,6 +55,18 @@ $(document).on('click', '#restart', function(){
   clearGameBoard();
 })
 
+//temporary draw token on open holes
+$(document).on('mouseenter mouseleave', '.open', function(event){
+  const token = $('.current .token div').html();
+  const hole = $(this).attr('id');
+  if( event.type === 'mouseenter' ){
+    $(this).html(token);
+  } else {
+    $(this).html('');
+  }
+})
+
+//clear the board
 const clearGameBoard = function(){
   //clear the $gameBoard amd add .open to the holes
   $('.hole').html('').addClass('open');

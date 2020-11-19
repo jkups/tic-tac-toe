@@ -98,29 +98,9 @@ $('#startGame').on('click', function(){
   //generate game components
   const $scoreBoard = generateScoreBoard(nickname);
 
-  const first = 1;
-  const $playerOne = generatePlayer(
-    nickname[0],
-    avatar[0],
-    token[0],
-    ids[0],
-    rounds,
-    first,
-    whoStarts
-  );
+  const { $playerOne, $playerTwo } = generatePlayers(nickname, avatar, token, ids, rounds, whoStarts)
 
   const $gameBoard = generateBoard(boardSize);
-
-  const second = 2;
-  const $playerTwo = generatePlayer(
-    nickname[1],
-    avatar[1],
-    token[1],
-    ids[1],
-    rounds,
-    second,
-    whoStarts
-  );
 
   //render game
   renderGame($scoreBoard, $playerOne, $gameBoard, $playerTwo);
