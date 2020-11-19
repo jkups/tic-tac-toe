@@ -168,7 +168,8 @@ const play = {
 
   findGameWinner: function(rounds){
     const winner = this.players.filter(function(el){
-      if((rounds % el.score !== 0 || rounds == el.score) && el.score !== 0){
+      if((rounds % el.score !== 0 || rounds === el.score || el.score === 1)
+      && el.score !== 0){
         return true;
       } else {
         return false;
