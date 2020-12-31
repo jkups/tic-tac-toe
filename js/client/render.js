@@ -1,12 +1,15 @@
 //rendering engine collection
 const renderGame = function($scoreBoard, $playerOne, $gameBoard, $playerTwo){
-  $('#playerSetup').css('display', 'none');
-  $('#gameSetup').css('display', 'none');
+  $('#localPlayers').hide();
+  $('#remotePlayers').hide();
+  $('#gameSetup').hide();
+  $('#navContainer #scoreboard').remove();
   $('#navContainer').append($scoreBoard);
 
   const $wrapperUl = $('<ul id="gameboard">');
   $wrapperUl.addClass('wrapper board');
   $wrapperUl.append($playerOne, $gameBoard, $playerTwo);
+  $('#bodyContainer #gameboard').remove();
   $('#bodyContainer').append($wrapperUl);
 }
 
@@ -43,7 +46,7 @@ const generateScoreBoard = function(nickname){
   return $wrapperDiv.append($scoreBoard);
 }
 
-const generatePlayers = function(nickname, avatar, token, id, rounds, start){
+const generatePlayers = function(nickname, avatar, token, id, rounds, nextround, current){
   const players = {};
 
   for(let i = 0; i < nickname.length; i++){
@@ -55,7 +58,7 @@ const generatePlayers = function(nickname, avatar, token, id, rounds, start){
     const $playerDiv = $('<div>');
     $playerDiv.attr('id', id[i]);
     $playerDiv.addClass('active');
-    if(start === i + 1){
+    if(current === i + 1){
       $playerDiv.addClass('current');
     }
 
@@ -76,7 +79,7 @@ const generatePlayers = function(nickname, avatar, token, id, rounds, start){
 
     for(let j = 1; j <= rounds; j++){
       let className = '';
-      if(j === 1){
+      if(j === nextround){
         className = 'current-round ';
       }
       const round = '<div class="' + className + j + '"><div>R' + j + '</div><div>-</div>';
@@ -93,7 +96,7 @@ const generatePlayers = function(nickname, avatar, token, id, rounds, start){
   return players;
 }
 
-const generateBoard =  function(size){
+const generateBoard =  function(size, token, holes, whoami){
   const $gameBoardLi = $('<li>');
   $gameBoardLi.addClass('gameboard');
 
@@ -116,8 +119,19 @@ const generateBoard =  function(size){
     const $ul = $('<ul>');
     for(let j = 0; j < size; j++){
       const $li = $('<li>');
-      const $hole = $('<div>')
-      $hole.addClass('hole open').css({ width: holeWidth, height: holeWidth, fontSize: holeWidth/2 + 'px' });
+      const $hole = $('<div>');
+      let holeState = ' open';
+      if(init.config.type === 'remote' && whoami !== init.config.currentPlayer)
+        holeState = '';
+
+      for(let k = 0; k < holes.length; k++){
+        if(holes[k] && holes[k].length > 0 && holes[k].includes(i.toString() + j.toString())){
+          holeState = ''
+          $hole.html(`<i class="${token[k]}"></i>`)
+        }
+      }
+
+      $hole.addClass('hole' + holeState).css({ width: holeWidth, height: holeWidth, fontSize: holeWidth/2 + 'px' });
       $hole.attr('id', i.toString() + j.toString())
       $li.append($hole);
       $ul.append($li);

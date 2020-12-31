@@ -11,9 +11,9 @@ body {
 }
 #bodyContainer {
   display: flex;
-  flex-flow: column;
   height: calc(100vh - 98px);
   justify-content: center;
+  align-items: center;
 }
 .logo {
   font-size: 28px;
@@ -87,6 +87,48 @@ nav .action {
 }
 #customBoardSize input {
   width: 100%;
+}
+
+#gameType div {
+  display: inline-block;
+  margin-right: 10px;
+  background-color: #09A3DB;
+  border-radius: 5px;
+  color: #fff;
+  cursor: pointer;
+}
+
+#gameType div:hover {
+  background-color: #077DA8;
+}
+
+#gameType div.selected {
+  background-color: #04445B;
+}
+#gameType input {
+  visibility: hidden;
+  margin-left: -20px;
+  position:absolute;
+}
+#gameType label {
+  display:inline-block;
+  padding: 20px;
+  cursor:pointer;
+}
+#joinRoom {
+  background-color: #09A3DB;
+  padding: 0;
+}
+#joinRoom label {
+  padding: 15px;
+  color: #fff;
+  cursor: pointer;
+}
+#playerPlaceholder {
+  background-color:lightgrey;
+  padding: 30px 10px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
 }
 .wrapper.board {
   width: 100%;
@@ -265,7 +307,7 @@ nav .action {
 .dropdown {
   width: 100%;
   border: none;
-  border-bottom: 1px dashed lightgrey;
+  /* border-bottom: 1px dashed lightgrey; */
   padding: 15px;
   font-size: 24px;
   background-color: unset;
@@ -322,6 +364,9 @@ nav .action {
 .form select {
   width: 100%;
 }
+.form.gameroom{
+  padding:0;
+}
 .vs {
   font-size: 36px;
   font-weight: 700;
@@ -332,12 +377,11 @@ nav .action {
 
 .action.start {
   text-align:right;
-  padding: 0 25px;
-  padding-right: 15px;
+  margin-right: -10px;
   margin-top: 30px;
 }
 
-.action.start button {
+.action.start button, .action.continue button {
   border-radius: 5px;
   border: none;
 }

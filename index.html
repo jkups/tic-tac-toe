@@ -51,7 +51,26 @@
 
   <div id="bodyContainer" class="container">
     <!-- for setup -->
-    <div id="playerSetup">
+    <div id="gameType">
+      <h2>How do you want to play?</h2>
+      <div class="selected">
+        <input id="local" type="radio" name="gametype" checked>
+        <label for="local">On this Computer</label>
+      </div>
+      <div>
+        <input id="remote" type="radio" name="gametype">
+        <label for="remote">Over the Internet</label>
+      </div>
+      <div>
+        <input id="ai" type="radio" name="gametype">
+        <label for="ai">Play with a Bot</label>
+      </div>
+      <div class="action continue">
+        <button id="continue">Continue</button>
+      </div>
+    </div>
+
+    <div id="localPlayers" style="display:none;">
       <ul class="wrapper board">
         <li class="players setup">
           <div class="heading setup">PLAYER 1</div>
@@ -146,7 +165,65 @@
         </li>
       </ul>
       <div class="action start">
-        <button id="startGame">Start Game</button>
+        <button id="startLocalGame">Start Game</button>
+      </div>
+    </div>
+
+    <div id="remotePlayers" style="display:none;">
+      <ul class="wrapper board">
+        <li class="players setup">
+          <div class="heading setup">REMOTE PLAYER</div>
+          <div class="form">
+            <label for="remotePlayer">
+              Name (Initials):
+            </label>
+            <input class="nickname" id="remotePlayer" value="P1" type="text">
+          </div>
+          <div class="form">
+            <label>Token (Required):</label>
+            <div class="dropdown-wrapper">
+              <button class="dropdown token" value="">Choose a token</button>
+              <ul class="menu" style="display:none;">
+                <li><i class="fas fa-check"></i> Check</li>
+                <li><i class="fas fa-circle"></i> Circle</li>
+                <li><i class="fas fa-grin-hearts"></i> Heart Face</li>
+                <li><i class="fas fa-heart"></i> Heart</li>
+              </ul>
+              <span class="dropdown-caret"><i class="fas fa-caret-down"></i></span>
+            </div>
+          </div>
+          <div class="form">
+            <label>Avatar (Required):</label>
+            <div class="dropdown-wrapper">
+              <button class="dropdown avatar">Choose an Avatar</button>
+              <ul class="menu avatar" style="display:none;">
+                <li><img src="images/avataaars-0.png" width="50px"></img></li>
+                <li><img src="images/avataaars-1.png" width="50px"></img></li>
+                <li><img src="images/avataaars-2.png" width="50px"></img></li>
+                <li><img src="images/avataaars-3.png" width="50px"></img></li>
+                <li><img src="images/avataaars-4.png" width="50px"></img></li>
+                <li><img src="images/avataaars-5.png" width="50px"></img></li>
+                <li><img src="images/avataaars-6.png" width="50px"></img></li>
+                <li><img src="images/avataaars-7.png" width="50px"></img></li>
+                <li><img src="images/avataaars-8.png" width="50px"></img></li>
+                <li><img src="images/avataaars-9.png" width="50px"></img></li>
+                <li><img src="images/avataaars-10.png" width="50px"></img></li>
+                <li><img src="images/avataaars-11.png" width="50px"></img></li>
+                <li><img src="images/avataaars-12.png" width="50px"></img></li>
+              </ul>
+              <span class="dropdown-caret"><i class="fas fa-caret-down"></i></span>
+            </div>
+          </div>
+          <div id="joinRoom" class="form">
+            <label><input type="checkbox"> Join a Game</label>
+          </div>
+          <div class="form gameroom" style="display:none;">
+            <input class="gameroom" id="gameId" placeholder="Enter the game room id" type="text">
+          </div>
+        </li>
+      </ul>
+      <div class="action start">
+        <button id="startRemoteGame">Start New Game</button>
       </div>
     </div>
   </div>
@@ -156,6 +233,24 @@
     </div>
   </div>
   <script src="js/jquery.js"></script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.1.1/firebase-database.js"></script>
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyCReylE7eC2HOYTPqdBSWUmxhY5IPXl6Y0",
+      authDomain: "tictactoe-5c09c.firebaseapp.com",
+      databaseURL: "https://tictactoe-5c09c.firebaseio.com",
+      projectId: "tictactoe-5c09c",
+      storageBucket: "tictactoe-5c09c.appspot.com",
+      messagingSenderId: "923084484072",
+      appId: "1:923084484072:web:58b0d86ba29742ca06485d"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+  </script>
   <script src="js/main.js"></script>
   <script src="js/client/init.js"></script>
   <script src="js/client/render.js"></script>

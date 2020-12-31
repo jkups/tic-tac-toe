@@ -1,15 +1,56 @@
 
-Player = function(name){
+Player = function(name, avatar, token){
   this.id = Math.floor(Math.random() * 100);
   this.name = name;
   this.hole = []; //store position, erased at the end of a round
   this.score = 0;
+  this.avatar = avatar;
+  this.token = token;
 };
+
+//firebase
+const database = firebase.database();
+
+const fireBase = {
+  setupAndUpdateRemoteGame: function(){
+    database.ref(`games/game-${init.config.gameId}/`).set({
+      config: init.config,
+      players: init.players
+    });
+  }, //setup()
+
+  getRemoteConfig: async function(gameId){
+    await database.ref(`games/game-${gameId}/config`).once('value', function(snapshot){
+      init.config = snapshot.val();
+    })
+  }, //getConfig()
+
+  addRemotePlayer: async function(gameId, name, token, avatar){
+    const newPlayer = new Player(name, avatar, token);
+    await database.ref(`/games/game-${gameId}/players/1`).set(newPlayer);
+  }, //addPlayer()
+
+  onRemoteGameChange: async function(gameId){
+    await database.ref(`games/game-${gameId}/`).on('value', function(snapshot){
+      init.config = snapshot.val().config
+      init.players = snapshot.val().players;
+
+      beginRender();
+    })
+  }, //onRemotePlayerChange()
+
+} //firebase
+
+
 
 //initialize game
 const init = {
+  whoAmI: 0,
+  players: [], //player data
+
   config:{
-    startPlayer: Math.floor(Math.random() * 2) + 1,
+    gameId: Math.floor(Math.random() * 10000),
+    currentPlayer: Math.floor(Math.random() * 2) + 1,
     size: 0,
     rounds: 0,
     nextRound: 1,
@@ -52,24 +93,30 @@ const init = {
     this.config.winMatrix.rightDiag.push(rightMatrix);
   }, //diagonalMatrix()
 
-  createPlayers: function(names){
-    const ids = [];
-    for(const name of names){
-      const newPlayer = new Player(name);
-      play.players.push(newPlayer);
-      ids.push(newPlayer.id);
+  createPlayers: function(names, avatars, tokens){
+    for(let i = 0; i < names.length; i++){
+      const name = names[i];
+      const avatar = avatars[i];
+      const token = tokens[i];
+
+      const newPlayer = new Player(name, avatar, token);
+      this.players.push(newPlayer);
     }
-    return ids;
   }, //createPlayers()
-}
+}// init
+
 
 const play = {
-  players:[], //holds player data
-
   ticTacToe: function(player, hole){
     // console.log(player);
     player = this.getPlayer(parseInt(player));
+
+    if(player.hole === undefined) player.hole = [];
+    init.config.currentPlayer = init.config.currentPlayer === 1 ? 2 : 1
     player.hole.push(hole);
+
+    if(init.config.type === 'remote')
+      fireBase.setupAndUpdateRemoteGame()
 
     if(player.hole.length >= init.config.size){
       return this.getWinner(player);
@@ -104,8 +151,8 @@ const play = {
             winner: true,
             name: player.name,
             player: player.id,
-            side: key,
-            group: group,
+            side: key, //row / column / diag
+            group: group, //column / row / diag index
             score: player.score,
             rounds: init.config.rounds,
             nextRound: init.config.nextRound
@@ -123,7 +170,7 @@ const play = {
   }, //getWinner()
 
   isDraw: function(){
-    const holesAllFilled = this.isHolesAllFilled(this.players);
+    const holesAllFilled = this.isHolesAllFilled(init.players);
     let gameOver = true;
 
     if(holesAllFilled){
@@ -145,7 +192,7 @@ const play = {
   }, //isDraw()
 
   emptyHoles: function(){
-    const players = this.players;
+    const players = init.players;
     for(player of players){
       player.hole = [];
     }
@@ -154,31 +201,31 @@ const play = {
   reInitialize: function(rounds){
     init.config.rounds = parseInt(rounds);
     init.config.nextRound = 1;
-    const players = this.players;
+    const players = init.players;
     for(player of players){
       player.score = 0;
     }
   }, //reInitialize()
 
   getPlayer: function(player){
-    return this.players.find(function(el){
-      return el.id === player;
+    return init.players.find(function(el){
+      return el.id === player
     });
   }, //getPlayer()
 
   findGameWinner: function(rounds){
-    const players = this.players;
+    const players = init.players;
 
     for(let i = 0; i < players.length - 1; i++){
-        if(players[i].score > players[i + 1].score){
-          return { gameWinner: true, winner: players[i] };
+      if(players[i].score > players[i + 1].score){
+        return { gameWinner: true, winner: players[i] };
 
-        } else if(players[i].score < players[i + 1].score){
-          return { gameWinner: true, winner: players[i + 1] };
+      } else if(players[i].score < players[i + 1].score){
+        return { gameWinner: true, winner: players[i + 1] };
 
-        } else {
-          return { gameWinner: false };
-        }
+      } else {
+        return { gameWinner: false };
+      }
     }
   }, //findGameWinner()
 
