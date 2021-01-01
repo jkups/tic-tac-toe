@@ -3,7 +3,8 @@ Player = function(name, avatar, token){
   this.id = Math.floor(Math.random() * 100);
   this.name = name;
   this.hole = []; //store position, erased at the end of a round
-  this.score = 0;
+  this.roundScore = {};
+  this.gameScore = 0;
   this.avatar = avatar;
   this.token = token;
 };
@@ -13,15 +14,23 @@ const database = firebase.database();
 
 const fireBase = {
   setupAndUpdateRemoteGame: function(){
-    database.ref(`games/game-${init.config.gameId}/`).set({
+    database.ref(`games/game-${init.config.gameId}`).set({
+      message: init.message,
+      destroy: init.destroy,
       config: init.config,
       players: init.players
     });
   }, //setup()
 
   getRemoteConfig: async function(gameId){
-    await database.ref(`games/game-${gameId}/config`).once('value', function(snapshot){
-      init.config = snapshot.val();
+    return await database.ref(`games/game-${gameId}/config`).once('value')
+    .then(function(snapshot){
+      if(snapshot.exists()){
+        init.config = snapshot.val();
+        return true;
+      } else {
+        return false;
+      }
     })
   }, //getConfig()
 
@@ -30,29 +39,44 @@ const fireBase = {
     await database.ref(`/games/game-${gameId}/players/1`).set(newPlayer);
   }, //addPlayer()
 
-  onRemoteGameChange: async function(gameId){
-    await database.ref(`games/game-${gameId}/`).on('value', function(snapshot){
-      init.config = snapshot.val().config
-      init.players = snapshot.val().players;
+  destroyGame: function(gameId){
+    database.ref(`games/game-${gameId}`).update({'destroy': true});
+  },//destroyGame()
 
-      beginRender();
+  onRemoteGameChange: async function(gameId){
+    await database.ref(`games/game-${gameId}`).on('value', function(snapshot){
+      if(snapshot.val().destroy){
+        database.ref(`games/game-${gameId}`).remove();
+        location.reload(true);
+
+      } else {
+        init.message = snapshot.val().message;
+        init.config = snapshot.val().config;
+        init.players = snapshot.val().players;
+
+        beginRender();
+
+        if(init.message !== '')
+          showMessage(init.message);
+      }
+
     })
   }, //onRemotePlayerChange()
-
 } //firebase
-
 
 
 //initialize game
 const init = {
   whoAmI: 0,
+  message: '',
   players: [], //player data
-
+  destroy: false,
   config:{
     gameId: Math.floor(Math.random() * 10000),
     currentPlayer: Math.floor(Math.random() * 2) + 1,
     size: 0,
-    rounds: 0,
+    remainingRounds: 0,
+    totalRounds: 0,
     nextRound: 1,
     type: 'local',
     winMatrix: {
@@ -112,16 +136,19 @@ const play = {
     player = this.getPlayer(parseInt(player));
 
     if(player.hole === undefined) player.hole = [];
-    init.config.currentPlayer = init.config.currentPlayer === 1 ? 2 : 1
     player.hole.push(hole);
 
-    if(init.config.type === 'remote')
-      fireBase.setupAndUpdateRemoteGame()
+    init.config.currentPlayer = init.config.currentPlayer === 1 ? 2 : 1
 
+    let result = null;
     if(player.hole.length >= init.config.size){
-      return this.getWinner(player);
+      result = this.getWinner(player);
     }
-    return { winner: false };
+
+    if(init.config.type === 'remote')
+      fireBase.setupAndUpdateRemoteGame();
+
+    return result ? result : { winner: false };
   }, //ticTacToe()
 
   getWinner: function(player){
@@ -140,21 +167,26 @@ const play = {
         }
 
         if(count === size){
-          player.score++;
-          init.config.rounds--;
-          if(init.config.rounds > 0){
+          player.gameScore++;
+
+          if(player.roundScore === undefined)
+            player.roundScore = {};
+
+          player.roundScore[init.config.nextRound] = 1;
+          init.config.remainingRounds--;
+          if(init.config.remainingRounds > 0){
             gameOver = false;
           }
-          init.config.nextRound++;
+
           return {
             gameOver: gameOver,
             winner: true,
             name: player.name,
             player: player.id,
             side: key, //row / column / diag
-            group: group, //column / row / diag index
-            score: player.score,
-            rounds: init.config.rounds,
+            group: group, //row / column / diag index
+            score: player.gameScore,
+            rounds: init.config.remainingRounds,
             nextRound: init.config.nextRound
           };
         }
@@ -174,16 +206,16 @@ const play = {
     let gameOver = true;
 
     if(holesAllFilled){
-      init.config.rounds--;
-      if(init.config.rounds > 0){
+      init.config.remainingRounds--;
+      if(init.config.remainingRounds > 0){
         gameOver = false;
       }
-      init.config.nextRound++;
+
       return {
         gameOver: gameOver,
         winner: false,
         draw: true,
-        rounds: init.config.rounds,
+        rounds: init.config.remainingRounds,
         nextRound: init.config.nextRound
       };
     }
@@ -191,19 +223,20 @@ const play = {
     return { winner: false };
   }, //isDraw()
 
-  emptyHoles: function(){
+  emptyHolesAndRoundScore: function(value){
     const players = init.players;
     for(player of players){
-      player.hole = [];
+      player[value] = value === 'hole' ? [] : {};
     }
   }, //emptyHoles()
 
-  reInitialize: function(rounds){
-    init.config.rounds = parseInt(rounds);
+  reInitialize: function(){
+    init.config.remainingRounds = init.config.totalRounds;
     init.config.nextRound = 1;
-    const players = init.players;
-    for(player of players){
-      player.score = 0;
+    init.message = '';
+
+    for(player of init.players){
+      player.gameScore = 0;
     }
   }, //reInitialize()
 
@@ -213,14 +246,14 @@ const play = {
     });
   }, //getPlayer()
 
-  findGameWinner: function(rounds){
+  findGameWinner: function(){
     const players = init.players;
 
     for(let i = 0; i < players.length - 1; i++){
-      if(players[i].score > players[i + 1].score){
+      if(players[i].gameScore > players[i + 1].gameScore){
         return { gameWinner: true, winner: players[i] };
 
-      } else if(players[i].score < players[i + 1].score){
+      } else if(players[i].gameScore < players[i + 1].gameScore){
         return { gameWinner: true, winner: players[i + 1] };
 
       } else {

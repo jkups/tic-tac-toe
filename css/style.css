@@ -124,11 +124,17 @@ nav .action {
   color: #fff;
   cursor: pointer;
 }
+#roomId {
+  font-size:3em;
+  font-weight: 700;
+}
+
 #playerPlaceholder {
   background-color:lightgrey;
   padding: 30px 10px;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
+  color: #04445B;
 }
 .wrapper.board {
   width: 100%;

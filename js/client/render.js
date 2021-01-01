@@ -9,11 +9,12 @@ const renderGame = function($scoreBoard, $playerOne, $gameBoard, $playerTwo){
   const $wrapperUl = $('<ul id="gameboard">');
   $wrapperUl.addClass('wrapper board');
   $wrapperUl.append($playerOne, $gameBoard, $playerTwo);
+  console.log('am here');
   $('#bodyContainer #gameboard').remove();
   $('#bodyContainer').append($wrapperUl);
 }
 
-const generateScoreBoard = function(nickname){
+const generateScoreBoard = function(nickname, score){
   const $wrapperDiv = $('<div id="scoreboard">');
   const $scoreBoard = $('<div>');
   $scoreBoard.addClass('scoreboard');
@@ -25,7 +26,7 @@ const generateScoreBoard = function(nickname){
     const $scoreLi = $('<li class="P' + (i + 1) + '">');
 
     $playerLi.html(nickname[i].toUpperCase());
-    $scoreLi.html(0);
+    $scoreLi.html(score[i]);
     $ul.append($playerLi, $scoreLi);
     $scoreBoard.append($ul);
   }
@@ -46,7 +47,7 @@ const generateScoreBoard = function(nickname){
   return $wrapperDiv.append($scoreBoard);
 }
 
-const generatePlayers = function(nickname, avatar, token, id, rounds, nextround, current){
+const generatePlayers = function(nickname, avatar, token, id, score, rounds, nextround, current){
   const players = {};
 
   for(let i = 0; i < nickname.length; i++){
@@ -82,7 +83,10 @@ const generatePlayers = function(nickname, avatar, token, id, rounds, nextround,
       if(j === nextround){
         className = 'current-round ';
       }
-      const round = '<div class="' + className + j + '"><div>R' + j + '</div><div>-</div>';
+
+      const point = score[i] && score[i][j] ? '1' : '-';
+
+      const round = '<div class="' + className + j + '"><div>R' + j + '</div><div>' + point + '</div>';
       $roundsDiv.append(round);
     }
 
@@ -161,7 +165,7 @@ const updateGame = function(response){
     //display appropriate message for winning
     renderWinMessage(
       response.gameOver,
-      response.rounds,
+      response.remainingRounds,
       response.nextRound,
       response.name,
       response.score,
@@ -184,20 +188,26 @@ const updateGame = function(response){
 
 const renderWinMessage = function(gameOver, rounds, nextRound, name, score, draw){
   let message;
-  const $gameMessage = $('<div>');
-  $gameMessage.addClass('message');
 
   if(gameOver){
     //generate win message
-    const totalRounds = rounds + nextRound - 1;
-    const winner = play.findGameWinner(totalRounds);
-    message = generateWinMessage(winner, totalRounds);
+    const winner = play.findGameWinner();
+    message = generateWinMessage(winner, init.config.totalRounds);
 
   } else {
     //generate draw message
     message = generateDrawMessage(draw, nextRound, name);
   }
 
+  init.message = message;
+  init.config.type === 'remote' ?
+    fireBase.setupAndUpdateRemoteGame() :
+    showMessage(message);
+}
+
+const showMessage = function(message){
+  const $gameMessage = $('<div>');
+  $gameMessage.addClass('message');
   $gameMessage.append(message);
   $('.gamestate').append($gameMessage).show();
 }
@@ -205,7 +215,7 @@ const renderWinMessage = function(gameOver, rounds, nextRound, name, score, draw
 const generateWinMessage = function(winner, totalRounds){
   if(winner.gameWinner){
     return '<div id="won"><h2>GAME OVER</h2>' +
-    '<p>' + winner.winner.name.toUpperCase() + ' won ' + winner.winner.score + ' of ' + totalRounds + ' rounds.</p>' +
+    '<p>' + winner.winner.name.toUpperCase() + ' won ' + winner.winner.gameScore + ' of ' + totalRounds + ' rounds.</p>' +
     '<div class="action">' +
       '<button id="restart">Restart Game</button>' +
       '<button class="newgame">New Game</button>' +
@@ -233,7 +243,7 @@ const generateDrawMessage = function(draw, nextRound, name){
   } else {
     const prevRound = nextRound - 1;
     return '<div id="won"><h2>Congratulations ' + name.toUpperCase() + '</h2>' +
-    '<p>You won round ' + prevRound + '.</p>' +
+    '<p>You won round ' + nextRound + '.</p>' +
     '<div class="action">' +
       '<button id="nextRound">Next Round</button>' +
       '<button class="newgame">New Game</button>' +

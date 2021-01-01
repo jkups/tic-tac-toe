@@ -113,7 +113,7 @@ const getPlayerData = function(gameType){
 }
 
 //initialize the game
-$('#startLocalGame, #startRemoteGame').on('click', function(){
+$('#startLocalGame, #startRemoteGame').on('click', async function(){
   //validate user input
   const gameType = init.config.type
   const validInput = validateInput(gameType);
@@ -122,50 +122,53 @@ $('#startLocalGame, #startRemoteGame').on('click', function(){
     return;
   }
 
+  //get player data
+  const rounds = $('#rounds').val();
+  const $boardSize = $('#boardSize');
+  const boardSize = $boardSize.val() === 'custom' ?
+    $('#customBoardSize input').val() : $boardSize.val();
+
   if(gameType === 'remote' && $('#joinRoom input:checked').length > 0){
     //remember which player you are (player 2)
     init.whoAmI = 2;
 
     const gameId = $('#gameId').val();
-    initiateRender(gameType, true);
-    fireBase.onRemoteGameChange(gameId);
-    // beginRender();
+
+    await initiateRender(gameType, boardSize, rounds, gameId, true) ?
+      fireBase.onRemoteGameChange(gameId) :
+      alert('No game exists with that room id.');
 
   } else if(gameType === 'remote'){
     //remember which player you are (player 1)
     init.whoAmI = 1;
 
-    initiateRender(gameType);
+    initiateRender(gameType, boardSize, rounds);
     fireBase.setupAndUpdateRemoteGame();
     fireBase.onRemoteGameChange(init.config.gameId);
-    // beginRender();
 
   } else {
-    initiateRender(gameType);
+    initiateRender(gameType, boardSize, rounds);
     beginRender();
   }
 })
 
-const initiateRender = async function(gameType, joinGame = false){
+const initiateRender = async function(gameType, boardSize, rounds, gameId = false, joinGame = false){
   const { nickname, token, avatar } = getPlayerData(gameType);
   init.createPlayers(nickname, avatar, token);
 
-  //get player data
-  const rounds = $('#rounds').val();
-  const $boardSize = $('#boardSize');
-  const boardSize = $boardSize.val() === 'custom' ?
-    $('#customBoardSize input').val(): $boardSize.val();
-
   if(joinGame){
     //join remote game
-    const gameId = $('#gameId').val();
-    await fireBase.getRemoteConfig(gameId);
-    await fireBase.addRemotePlayer(gameId, nickname[0], token[0], avatar[0]);
+    if(await fireBase.getRemoteConfig(gameId)){
+      fireBase.addRemotePlayer(gameId, nickname[0], token[0], avatar[0]);
+      return true;
+    }
+    return false;
 
   } else {
     //initialize new game
     init.config.size = parseInt(boardSize);
-    init.config.rounds = parseInt(rounds);
+    init.config.remainingRounds = parseInt(rounds);
+    init.config.totalRounds = parseInt(rounds);
     init.generateWinMatrix();
   }
 }
@@ -174,24 +177,26 @@ const beginRender = function(){
   //generate game components
   const size = init.config.size;
   const currentPlayer = init.config.currentPlayer;
-  const rounds = init.config.rounds;
+  const rounds = init.config.totalRounds;
   const nextRound = init.config.nextRound;
   const nickname = init.players.map( el => el.name );
   const avatar = init.players.map( el => el.avatar );
   const token = init.players.map( el => el.token );
   const id = init.players.map( el => el.id );
+  const roundScore = init.players.map( el => el.roundScore );
+  const gameScore = init.players.map( el => el.gameScore );
   const holes = init.players.map( el => el.hole );
   const whoami = init.whoAmI;
 
   const $gameBoard = generateBoard(size, token, holes, whoami);
-  const $scoreBoard = generateScoreBoard(nickname);
+  const $scoreBoard = generateScoreBoard(nickname, gameScore);
 
   let { $playerOne, $playerTwo } = generatePlayers(
-    nickname, avatar, token, id, rounds, nextRound, currentPlayer
+    nickname, avatar, token, id, roundScore, rounds, nextRound, currentPlayer
   )
 
   if(!$playerTwo){
-    $playerTwo = `<div id="playerPlaceholder" style="width:150.53px">Waiting for player two to join the game.<br><br>Your game id is ${init.config.gameId} </div>`
+    $playerTwo = `<div id="playerPlaceholder" style="width:150.53px">Waiting for the second player to join the game.<br><br>You will need to send them the game room id below before they can join the game.<br><br> <span id="roomId">${init.config.gameId}<span> </div>`
   };
 
   //render game
