@@ -35,11 +35,11 @@ To participate in an online game, you will either need to start a new game and i
 
 This is a two player, turn based game. And as such game rooms are restricted to two participants at a time. But you can start multiple games and play with multiple opponents in self-contained 2 participant rooms if you like.
 
-## Features in the works
-
-- Support for an AI player
-
 ## Bugs and Known Issues
 Still looking for the bug... not found any. Let me know when you do 'cos am sure there must be some.
 
 Also the app has not been optimized for performance nor paid any attention to network distruptions that could hamper smooth playing over the internet. Suffice to say a good internet speed will make all the difference.
+
+## Features in the works
+
+- Support for an AI player
