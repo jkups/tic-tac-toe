@@ -64,6 +64,17 @@ nav .action {
   border-left:1px solid black;
   border-right:1px solid black;
 }
+.action span {
+  display: inline-block;
+  padding: 5px;
+  margin-right: 15px;
+  cursor: pointer;
+  font-size: 18px;
+  text-decoration: underline;
+}
+/* .action span:hover{
+  text-decoration
+} */
 .scoreboard span {
   font-size: 28px;
   line-height: 20px;
